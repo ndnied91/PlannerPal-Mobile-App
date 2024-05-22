@@ -1,43 +1,95 @@
-import { SafeAreaView, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  SafeAreaView,
+  FlatList,
+  Button,
+  TouchableOpacity,
+} from 'react-native';
 import React, { useState } from 'react';
 
-import TodoList from '../components/TodoList';
 import AddNewItemModal from '../components/AddNewItemModal';
 import ViewCompletedModal from '../components/ViewCompletedModal';
 
 import { Entypo, MaterialIcons } from '@expo/vector-icons';
+import SortModal from '../components/SortModal';
+import FilterModal from '../components/FilterModal';
+import { useGlobalContext } from '../context/GlobalProvider';
+import { FontAwesome } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+
+import TodoList from '../components/MainTodoItems/TodoList';
 
 const HomeScreen = ({ navigation }) => {
   const [isPlusModalVisible, setPlusIsModalVisible] = useState(false);
   const [isCompletedModalVisible, setIsCompletedModalVisible] = useState(false);
+  const [isSortModalVisible, setIsSortModalVisible] = useState(false);
+  const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
+  const { error, setTodos, sortedTodos, selectedFilter } = useGlobalContext();
   return (
-    <SafeAreaView>
-      <TodoList navigation={navigation} />
+    <SafeAreaView className="h-full bg-green-100 w-screen">
+      <SortModal
+        isSortModalVisible={isSortModalVisible}
+        setIsSortModalVisible={setIsSortModalVisible}
+      />
+      <FilterModal
+        isCategoryModalVisible={isCategoryModalVisible}
+        setIsCategoryModalVisible={setIsCategoryModalVisible}
+        title={'Filter By'}
+      />
 
+      <View className=" flex-row justify-end pr-4">
+        <View className="flex-row items-center gap-1">
+          <Text
+            className="text-gray-500"
+            onPress={() => setIsCategoryModalVisible(true)}
+          >
+            {selectedFilter}
+          </Text>
+          <Ionicons
+            name="filter-circle-sharp"
+            size={30}
+            color="green"
+            onPress={() => setIsCategoryModalVisible(true)}
+          />
+          <FontAwesome
+            name="sort"
+            size={30}
+            color="green"
+            onPress={() => setIsSortModalVisible(true)}
+          />
+        </View>
+      </View>
+
+      {/* todo list goes here */}
+      <TodoList navigation={navigation} />
+      {/* todo list goes here ^^ */}
+
+      {/*  new todo modal and button */}
+      <TouchableOpacity
+        onPress={() => setPlusIsModalVisible(true)}
+        className="mb-10 absolute bottom-0 right-2"
+      >
+        <Entypo name="add-to-list" size={30} color="black" />
+      </TouchableOpacity>
       <AddNewItemModal
         isPlusModalVisible={isPlusModalVisible}
         closeModal={() => setPlusIsModalVisible(false)}
         navigation={navigation}
       />
 
-      <ViewCompletedModal
-        isCompletedModalVisible={isCompletedModalVisible}
-        closeModal={() => setIsCompletedModalVisible(false)}
-      />
-
-      <TouchableOpacity
-        onPress={() => setPlusIsModalVisible(true)}
-        className="absolute bottom-36 right-5 mb-10"
-      >
-        <Entypo name="add-to-list" size={30} color="black" />
-      </TouchableOpacity>
-
+      {/*  completed todos modal and button */}
       <TouchableOpacity
         onPress={() => setIsCompletedModalVisible(true)}
-        className="absolute bottom-36 left-5 mb-10"
+        className="mb-10 absolute bottom-0 left-2"
       >
         <MaterialIcons name="download-done" size={35} color="green" />
       </TouchableOpacity>
+      <ViewCompletedModal
+        navigation={navigation}
+        isCompletedModalVisible={isCompletedModalVisible}
+        closeModal={() => setIsCompletedModalVisible(false)}
+      />
     </SafeAreaView>
   );
 };

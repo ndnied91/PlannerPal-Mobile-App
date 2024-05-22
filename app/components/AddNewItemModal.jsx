@@ -54,32 +54,41 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
   };
 
   const handleSubmit = async () => {
-    //move main logic to global context
-    try {
-      const { data, error } = await supabase
-        .from('todos')
-        .insert([
-          {
-            created_by: user.primaryEmailAddress.emailAddress,
-            isPriority: false,
-            title: formData.title,
-            body: formData.body,
-            isCompleted: false,
-            dueDate: selectedDate,
-            category: selectedCategory,
-          },
-        ])
-        .select();
-      fetchTodos();
+    if (formData.title !== '' || formData.body !== '') {
+      if (selectedCategory === '') setSelectedCategory('All');
+      try {
+        const { data, error } = await supabase
+          .from('todos')
+          .insert([
+            {
+              created_by: user.primaryEmailAddress.emailAddress,
+              isPriority: false,
+              title: formData.title,
+              body: formData.body,
+              isCompleted: false,
+              dueDate: selectedDate,
+              category: selectedCategory,
+            },
+          ])
+          .select();
 
-      resetFormState();
-      closeModal();
+        fetchTodos();
 
-      if (data) {
-        Alert.alert('Todo successfully created!');
+        resetFormState();
+        closeModal();
+
+        if (data) {
+          Alert.alert('Todo successfully created!');
+        }
+
+        if (error) {
+          console.log('Supabase error:', error);
+        }
+      } catch (e) {
+        console.log('Catch error:', e);
       }
-    } catch (e) {
-      console.log(e);
+    } else {
+      Alert.alert("Title or body can't be empty");
     }
   };
 
@@ -146,7 +155,7 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
           />
 
           <TouchableOpacity
-            className="bg-green-500 p-4 w-full rounded-lg"
+            className="bg-green-500 p-4 rounded-lg"
             onPress={handleSubmit}
           >
             <Text className="text-center font-bold tracking-wider">

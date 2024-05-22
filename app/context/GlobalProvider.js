@@ -51,11 +51,38 @@ const GlobalProvider = ({ children }) => {
   }, [todos]);
 
   const deleteTodo = async (id) => {
-    const { error } = await supabase.from('todos').delete().eq('id', id);
-    if (!error) {
-      Alert.alert('Item successfully deleted');
-      fetchTodos();
-    }
+    Alert.alert(
+      'Confirm Deletion',
+      'Are you sure you want to delete this item?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Deletion cancelled'),
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: async () => {
+            try {
+              const { error } = await supabase
+                .from('todos')
+                .delete()
+                .eq('id', id);
+              if (!error) {
+                Alert.alert('Item successfully deleted');
+                fetchTodos();
+              } else {
+                console.error('Error deleting item:', error);
+              }
+            } catch (e) {
+              console.error('Catch error:', e);
+            }
+          },
+          style: 'destructive',
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   return (

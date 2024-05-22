@@ -5,9 +5,15 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Modal from 'react-native-modal';
 import { supabase } from '../../utils/SupabaseConfig';
 import { useGlobalContext } from '../context/GlobalProvider';
-import TodoItem from './TodoItem';
+// import TodoItem from './TodoItem';
 
-const ViewCompletedModal = ({ isCompletedModalVisible, closeModal }) => {
+import SingleTodo from './MainTodoItems/SingleTodo';
+
+const ViewCompletedModal = ({
+  isCompletedModalVisible,
+  closeModal,
+  navigation,
+}) => {
   const { todos, setTodos } = useGlobalContext();
 
   const handleCheckboxChange = (id) => {
@@ -23,9 +29,10 @@ const ViewCompletedModal = ({ isCompletedModalVisible, closeModal }) => {
   const renderItem = ({ item }) => {
     return (
       item.isCompleted && (
-        <TodoItem
+        <SingleTodo
           item={item}
           onCheckboxChange={() => handleCheckboxChange(item.id)}
+          navigation={navigation}
         />
       )
     );

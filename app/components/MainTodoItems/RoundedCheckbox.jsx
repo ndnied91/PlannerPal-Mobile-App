@@ -1,16 +1,20 @@
 import React from 'react';
-import { TouchableOpacity, View, StyleSheet, Alert } from 'react-native';
+import { TouchableOpacity, View, Alert } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; // Assuming you're using Expo
+import { supabase } from '../../../utils/SupabaseConfig';
 
-const RoundedCheckbox = ({
-  completed,
-  isCompleted,
-  setIsCompleted,
-  updateCompletion,
-}) => {
+const RoundedCheckbox = ({ id, isCompleted, setIsCompleted, completed }) => {
+  const updateCompletion = async (updatedState) => {
+    // onCheckboxChange();
+    await supabase
+      .from('todos')
+      .update({ isCompleted: updatedState })
+      .eq('id', id)
+      .select();
+  };
+
   return (
     <TouchableOpacity
-      className=""
       onPress={() => {
         Alert.alert(
           'Confirm Action',
