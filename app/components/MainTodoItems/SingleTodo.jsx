@@ -5,13 +5,11 @@ import { View, Text, TouchableOpacity } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';
 import RoundedCheckbox from './RoundedCheckbox';
-import { useGlobalContext } from '../../context/GlobalProvider';
+
 import { convertToNormalTime } from '../../../utils/utilsFunctions';
 
 const SingleTodo = ({ item, navigation }) => {
   const [isCompleted, setIsCompleted] = useState(item.isCompleted);
-  // individual todo
-  const {} = useGlobalContext();
 
   return (
     <View>

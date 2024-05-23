@@ -2,16 +2,23 @@ import React from 'react';
 import { TouchableOpacity, View, Alert } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; // Assuming you're using Expo
 import { supabase } from '../../../utils/SupabaseConfig';
+import { useGlobalContext } from '../../context/GlobalProvider';
 
 const RoundedCheckbox = ({ id, isCompleted, setIsCompleted, completed }) => {
-  const updateCompletion = async (updatedState) => {
-    // onCheckboxChange();
-    await supabase
-      .from('todos')
-      .update({ isCompleted: updatedState })
-      .eq('id', id)
-      .select();
-  };
+  const { updateCompletion } = useGlobalContext();
+
+  // const updateCompletion = async (updatedState) => {
+  //   const { data, error } = await supabase
+  //     .from('todos')
+  //     .update({ isCompleted: updatedState })
+  //     .eq('id', id)
+  //     .select();
+
+  //   const updatedArr = sortedTodos.map((item) =>
+  //     item.id === data.id ? data : item
+  //   );
+  //   setTodos(updatedArr);
+  // };
 
   return (
     <TouchableOpacity
@@ -25,7 +32,7 @@ const RoundedCheckbox = ({ id, isCompleted, setIsCompleted, completed }) => {
               text: 'OK',
               onPress: () => {
                 setIsCompleted(!isCompleted);
-                updateCompletion(!isCompleted);
+                updateCompletion(id, !isCompleted);
               },
             },
           ]

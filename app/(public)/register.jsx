@@ -50,7 +50,6 @@ const Register = () => {
         code,
       });
 
-      console.log(completeSignUp);
       await setActive({ session: completeSignUp.createdSessionId });
     } catch (err) {
       alert(err.errors[0].message);

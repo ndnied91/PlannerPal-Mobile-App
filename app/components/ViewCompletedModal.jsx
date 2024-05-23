@@ -14,7 +14,9 @@ const ViewCompletedModal = ({
   closeModal,
   navigation,
 }) => {
-  const { todos, setTodos } = useGlobalContext();
+  const { sortedTodos, todos, setTodos } = useGlobalContext();
+
+  const completedTodos = sortedTodos.filter((item) => item.isCompleted);
 
   const handleCheckboxChange = (id) => {
     // Update the state variable to force a rerender

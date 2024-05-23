@@ -12,7 +12,6 @@ const CategoryPicker = ({
 
   const handleChange = (category) => {
     if (createItem) {
-      console.log('category', category);
       setSelectedCategory(category);
     } else {
       setSelectedFilter(category);

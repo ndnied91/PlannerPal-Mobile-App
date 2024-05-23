@@ -1,8 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TodosHomeScreen from '../screens/TodosHomeScreen'; // Adjust the import path as necessary
-import TestScreen from '../screens/TestScreen';
-
 import ItemDetails from '../screens/ItemDetails';
 import { AntDesign } from '@expo/vector-icons';
 
@@ -34,7 +32,6 @@ const HomeStack = () => {
           headerBackTitle: 'Back',
         }}
       />
-      <Stack.Screen name="TestScreen" component={TestScreen} />
       {/* Add more screens to the stack as needed */}
     </Stack.Navigator>
   );

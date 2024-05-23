@@ -50,14 +50,18 @@ const GlobalProvider = ({ children }) => {
     setCategories([...new Set(todos.map((todos) => todos.category))]);
   }, [todos]);
 
-  const deleteTodo = async (id) => {
+  const deleteTodo = async (id, callback) => {
     Alert.alert(
       'Confirm Deletion',
       'Are you sure you want to delete this item?',
       [
         {
           text: 'Cancel',
-          onPress: () => console.log('Deletion cancelled'),
+          onPress: () => {
+            if (callback && typeof callback === 'function') {
+              callback(); // Call the callback function
+            }
+          },
           style: 'cancel',
         },
         {
@@ -69,7 +73,11 @@ const GlobalProvider = ({ children }) => {
                 .delete()
                 .eq('id', id);
               if (!error) {
+                if (callback && typeof callback === 'function') {
+                  callback(); // Call the callback function
+                }
                 Alert.alert('Item successfully deleted');
+
                 fetchTodos();
               } else {
                 console.error('Error deleting item:', error);
@@ -83,6 +91,48 @@ const GlobalProvider = ({ children }) => {
       ],
       { cancelable: false }
     );
+  };
+
+  const updatePriorityStatus = async (item, callback) => {
+    console.log('update to priority status for item', item);
+    //make a call to api , update the item with the id that was provided
+    try {
+      const { data, error } = await supabase
+        .from('todos')
+        .update({
+          isPriority: !item.isPriority,
+        })
+        .eq('id', item.id)
+        .select();
+
+      if (!error) {
+        if (callback && typeof callback === 'function') {
+          callback(); // Call the callback function
+          //close()
+        }
+        Alert.alert('Item successfully updated');
+
+        fetchTodos();
+        //fetchTodos()
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    // alert updated status of todo
+  };
+
+  const updateCompletion = async (id, updatedState) => {
+    const { data, error } = await supabase
+      .from('todos')
+      .update({ isCompleted: updatedState })
+      .eq('id', id)
+      .select();
+
+    const updatedArr = sortedTodos.map((item) =>
+      item.id === data.id ? data : item
+    );
+    setTodos(updatedArr);
   };
 
   return (
@@ -105,6 +155,8 @@ const GlobalProvider = ({ children }) => {
         setSelectedFilter,
         categories,
         setCategories,
+        updatePriorityStatus,
+        updateCompletion,
       }}
     >
       {children}

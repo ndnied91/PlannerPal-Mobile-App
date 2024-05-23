@@ -13,9 +13,6 @@ import { useAuth } from '@clerk/clerk-expo';
 import { useGlobalContext } from '../context/GlobalProvider';
 
 const Profile = () => {
-  // const { isLogged } = useGlobalContext();
-  // console.log(isLogged);
-
   const { user } = useUser();
   const { signOut } = useAuth();
   const [firstName, setFirstName] = useState(user.firstName);

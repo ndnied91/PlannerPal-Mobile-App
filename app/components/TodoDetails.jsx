@@ -55,21 +55,25 @@ const TodoDetails = ({ item, navigation }) => {
   };
 
   const handleSubmit = async () => {
-    const { data, error } = await supabase
-      .from('todos')
-      .update({
-        isPriority: itemDetails.isPriority,
-        title: itemDetails.title,
-        body: itemDetails.body,
-        dueDate: selectedDate,
-      })
-      .eq('id', item.id)
-      .select();
+    try {
+      const { data, error } = await supabase
+        .from('todos')
+        .update({
+          isPriority: itemDetails.isPriority,
+          title: itemDetails.title,
+          body: itemDetails.body,
+          dueDate: selectedDate,
+        })
+        .eq('id', item.id)
+        .select();
 
-    if (error === null) {
-      Alert.alert('Item successfully updated!');
-      fetchTodos();
-      navigation.goBack();
+      if (!error) {
+        Alert.alert('Item successfully updated!');
+        fetchTodos();
+        navigation.goBack();
+      }
+    } catch (e) {
+      Alert(e);
     }
   };
 

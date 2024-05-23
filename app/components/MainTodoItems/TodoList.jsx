@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet } from 'react-native';
-import { FlatList, RectButton } from 'react-native-gesture-handler';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { SafeAreaView, ScrollView } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
+import { View, Text } from 'react-native';
 
 import SingleTodo from './SingleTodo';
 
 import AppleStyleSwipeableRow from './AppleStylesSwipeableRow';
 import { useGlobalContext } from '../../context/GlobalProvider';
+import { useEffect } from 'react';
 
-const SwipeableRow = ({ item, index, navigation }) => {
-  console.log(navigation);
+const SwipeableRow = ({ item, navigation }) => {
   return (
-    <AppleStyleSwipeableRow>
+    <AppleStyleSwipeableRow item={item}>
       <SingleTodo item={item} navigation={navigation} />
     </AppleStyleSwipeableRow>
   );
@@ -19,16 +18,49 @@ const SwipeableRow = ({ item, index, navigation }) => {
 
 const TodoList = ({ navigation }) => {
   const { sortedTodos } = useGlobalContext();
+  const isPriority = sortedTodos.some(
+    (item) => item.isPriority && !item.isCompleted
+  );
+
+  // useEffect(() => {
+  //   console.log(sortedTodos);
+  // }, [sortedTodos]);
+
   return (
     <SafeAreaView>
-      <FlatList
-        data={sortedTodos}
-        ItemSeparatorComponent={() => <View className="m-1" />}
-        renderItem={({ item, index }) => (
-          <SwipeableRow item={item} index={index} navigation={navigation} />
-        )}
-        keyExtractor={(item, index) => `message ${index}`}
-      />
+      {isPriority && (
+        <View className="h-[35%]">
+          {/* priority list */}
+          <Text className="font-bold text-xl mb-3"> Priority List</Text>
+
+          <FlatList
+            data={sortedTodos.filter(
+              (item) => item.isPriority && !item.isCompleted
+            )}
+            ItemSeparatorComponent={() => <View className="m-1" />}
+            renderItem={({ item, index }) => (
+              <SwipeableRow item={item} index={index} navigation={navigation} />
+            )}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={'mb-20'}
+          />
+        </View>
+      )}
+
+      <View className="h-[75%]">
+        <Text className="font-bold text-xl mb-3"> Current Todos </Text>
+        <FlatList
+          data={sortedTodos.filter(
+            (item) => !item.isPriority && !item.isCompleted
+          )}
+          ItemSeparatorComponent={() => <View className="m-1" />}
+          renderItem={({ item, index }) => (
+            <SwipeableRow item={item} index={index} navigation={navigation} />
+          )}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={'mb-20 pb-20'}
+        />
+      </View>
     </SafeAreaView>
   );
 };

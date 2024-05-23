@@ -1,10 +1,18 @@
 import React, { useRef } from 'react';
 import { Animated, StyleSheet, Text, View, I18nManager } from 'react-native';
 import { RectButton, Swipeable } from 'react-native-gesture-handler';
-import { EvilIcons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+import {
+  EvilIcons,
+  AntDesign,
+  MaterialIcons,
+  FontAwesome,
+  FontAwesome6,
+} from '@expo/vector-icons';
 
-const AppleStyleSwipeableRow = ({ children }) => {
+import { useGlobalContext } from '../../context/GlobalProvider';
+
+const AppleStyleSwipeableRow = ({ children, item }) => {
+  const { deleteTodo, updatePriorityStatus } = useGlobalContext();
   const swipeableRowRef = useRef(null);
 
   const renderLeftActions = (progress, dragX) => {
@@ -12,15 +20,17 @@ const AppleStyleSwipeableRow = ({ children }) => {
       inputRange: [0, 100],
       outputRange: [-20, 0],
     });
+    const pressHandler = async () => await updatePriorityStatus(item, close);
+
     return (
       <RectButton
-        className="w-18 items-center flex-row bg-blue-600 text-center pl-8"
-        onPress={close}
+        className="items-center flex-row bg-yellow-300 text-center pl-9"
+        onPress={pressHandler}
       >
         <Animated.Text
           style={[styles.actionText, { transform: [{ translateX: trans }] }]}
         >
-          <AntDesign name="pushpin" size={26} color="black" />
+          <FontAwesome name="exclamation-circle" size={32} color="black" />
         </Animated.Text>
       </RectButton>
     );
@@ -31,14 +41,12 @@ const AppleStyleSwipeableRow = ({ children }) => {
       inputRange: [0, 1],
       outputRange: [x, 0],
     });
-    const pressHandler = () => {
-      close();
-      alert(text);
-    };
+    const pressHandler = async () => await deleteTodo(item.id, close);
+
     return (
       <Animated.View style={{ flex: 1, transform: [{ translateX: 0 }] }}>
         <RectButton
-          className="h-full items-center flex-row bg-red-600 text-center pl-2"
+          className="h-full items-center flex-row bg-red-600 justify-center"
           style={{ backgroundColor: color }}
           onPress={pressHandler}
         >
@@ -51,12 +59,12 @@ const AppleStyleSwipeableRow = ({ children }) => {
   const renderRightActions = (progress) => (
     <View
       style={{
-        width: 72,
+        width: 80,
         flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
       }}
     >
       {renderRightAction(
-        <EvilIcons name="trash" size={38} color="black" />,
+        <FontAwesome6 name="trash-alt" size={32} color="black" />,
         '#dd2c00',
         72,
         progress
@@ -69,6 +77,7 @@ const AppleStyleSwipeableRow = ({ children }) => {
 
   return (
     <Swipeable
+      style={styles.swipeable}
       ref={updateRef}
       friction={2}
       leftThreshold={30}
@@ -82,12 +91,6 @@ const AppleStyleSwipeableRow = ({ children }) => {
 };
 
 const styles = StyleSheet.create({
-  // leftAction: {
-  //   width: 64,
-  //   alignContent: 'center',
-  //   backgroundColor: '#497AFC',
-  //   justifyContent: 'center',
-  // },
   actionText: {
     color: 'white',
     fontSize: 16,
@@ -98,6 +101,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
+  },
+  swipeable: {
+    margin: 2,
   },
 });
 
