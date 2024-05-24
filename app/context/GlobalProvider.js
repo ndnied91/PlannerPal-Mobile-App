@@ -28,6 +28,14 @@ const GlobalProvider = ({ children }) => {
     return 0;
   });
 
+  useEffect(() => {
+    fetchTodos();
+  }, []); // Empty dependency array ensures this effect runs only once, similar to componentDidMount
+
+  useEffect(() => {
+    setCategories([...new Set(todos.map((todos) => todos.category))]);
+  }, [todos]);
+
   const fetchTodos = async () => {
     try {
       const { data, error } = await supabase
@@ -42,13 +50,6 @@ const GlobalProvider = ({ children }) => {
       setError(error.message);
     }
   };
-  useEffect(() => {
-    fetchTodos();
-  }, []); // Empty dependency array ensures this effect runs only once, similar to componentDidMount
-
-  useEffect(() => {
-    setCategories([...new Set(todos.map((todos) => todos.category))]);
-  }, [todos]);
 
   const deleteTodo = async (id, callback) => {
     Alert.alert(
@@ -129,10 +130,8 @@ const GlobalProvider = ({ children }) => {
       .eq('id', id)
       .select();
 
-    const updatedArr = sortedTodos.map((item) =>
-      item.id === data.id ? data : item
-    );
-    setTodos(updatedArr);
+    // fetchTodos();
+    // setTodos(sortedTodos.map((item) => (item.id === data.id ? data : item)));
   };
 
   return (

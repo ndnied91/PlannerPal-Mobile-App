@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  SafeAreaView,
-  FlatList,
-  Button,
-  TouchableOpacity,
-} from 'react-native';
+import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
 import React, { useState } from 'react';
 
 import AddNewItemModal from '../components/AddNewItemModal';
@@ -25,9 +18,9 @@ const HomeScreen = ({ navigation }) => {
   const [isCompletedModalVisible, setIsCompletedModalVisible] = useState(false);
   const [isSortModalVisible, setIsSortModalVisible] = useState(false);
   const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
-  const { error, setTodos, sortedTodos, selectedFilter } = useGlobalContext();
+  const { selectedFilter } = useGlobalContext();
   return (
-    <SafeAreaView className="h-full bg-green-100 w-screen">
+    <SafeAreaView className="h-full bg-slate-100 w-screen">
       <SortModal
         isSortModalVisible={isSortModalVisible}
         setIsSortModalVisible={setIsSortModalVisible}

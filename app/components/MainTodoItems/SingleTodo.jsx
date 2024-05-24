@@ -18,7 +18,6 @@ const SingleTodo = ({ item, navigation }) => {
           id={item.id}
           isCompleted={isCompleted}
           setIsCompleted={setIsCompleted}
-          completed={() => setIsCompleted(!isCompleted)}
         />
 
         <View className="flex-col pl-8">

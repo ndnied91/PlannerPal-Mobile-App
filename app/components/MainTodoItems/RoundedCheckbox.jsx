@@ -4,21 +4,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'; // Assuming you're 
 import { supabase } from '../../../utils/SupabaseConfig';
 import { useGlobalContext } from '../../context/GlobalProvider';
 
-const RoundedCheckbox = ({ id, isCompleted, setIsCompleted, completed }) => {
+const RoundedCheckbox = ({ id, isCompleted, setIsCompleted }) => {
   const { updateCompletion } = useGlobalContext();
-
-  // const updateCompletion = async (updatedState) => {
-  //   const { data, error } = await supabase
-  //     .from('todos')
-  //     .update({ isCompleted: updatedState })
-  //     .eq('id', id)
-  //     .select();
-
-  //   const updatedArr = sortedTodos.map((item) =>
-  //     item.id === data.id ? data : item
-  //   );
-  //   setTodos(updatedArr);
-  // };
 
   return (
     <TouchableOpacity

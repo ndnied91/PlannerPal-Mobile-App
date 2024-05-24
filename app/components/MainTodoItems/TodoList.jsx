@@ -6,7 +6,6 @@ import SingleTodo from './SingleTodo';
 
 import AppleStyleSwipeableRow from './AppleStylesSwipeableRow';
 import { useGlobalContext } from '../../context/GlobalProvider';
-import { useEffect } from 'react';
 
 const SwipeableRow = ({ item, navigation }) => {
   return (
@@ -21,10 +20,6 @@ const TodoList = ({ navigation }) => {
   const isPriority = sortedTodos.some(
     (item) => item.isPriority && !item.isCompleted
   );
-
-  // useEffect(() => {
-  //   console.log(sortedTodos);
-  // }, [sortedTodos]);
 
   return (
     <SafeAreaView>
