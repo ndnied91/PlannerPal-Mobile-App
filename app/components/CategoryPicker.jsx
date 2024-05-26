@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet } from 'react-native';
-import React from 'react';
+import { View, Text, StyleSheet, TextInput } from 'react-native';
+import React, { useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import { useGlobalContext } from '../context/GlobalProvider';
 
@@ -7,8 +7,10 @@ const CategoryPicker = ({
   selectedCategory,
   setSelectedCategory,
   createItem,
+  setIsNewCategoryModalVisible,
 }) => {
   const { selectedFilter, setSelectedFilter, categories } = useGlobalContext();
+  console.log(selectedFilter);
 
   const handleChange = (category) => {
     if (createItem) {

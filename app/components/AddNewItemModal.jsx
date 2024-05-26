@@ -39,8 +39,6 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
     }
   };
 
-  const showDatePicker = () => setShowPicker(true);
-
   const handleInputChange = (name, text) => {
     setFormData({
       ...formData,
@@ -149,7 +147,7 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
                 <View
                   className={`flex-row items-center mb-2 border p-2 border-gray-300 rounded`}
                 >
-                  <Text className="text-gray-500"> Select due date </Text>
+                  <Text className="text-gray-500"> Due date </Text>
                   <DateTimePicker
                     value={selectedDate}
                     mode="datetime"
@@ -159,15 +157,15 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
                   />
                 </View>
 
-                <View className="flex-row items-center p-3 border border-gray-300 rounded mb-10">
-                  <Text className="text-gray-500 pr-2">Select a category </Text>
-                  <TouchableOpacity
-                    onPress={() => setIsCategoryModalVisible(true)}
-                    className="p-2 bg-gray-200 w-32 rounded-lg shadow-md"
-                  >
+                <TouchableOpacity
+                  className="flex-row items-center p-3 border border-gray-300 rounded mb-10"
+                  onPress={() => setIsCategoryModalVisible(true)}
+                >
+                  <Text className="text-gray-500 pr-2">Category </Text>
+                  <View className="p-2 bg-gray-200 w-32 rounded-lg shadow-md">
                     <Text>{selectedCategory}</Text>
-                  </TouchableOpacity>
-                </View>
+                  </View>
+                </TouchableOpacity>
 
                 <FilterModal
                   isCategoryModalVisible={isCategoryModalVisible}
