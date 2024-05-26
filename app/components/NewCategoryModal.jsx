@@ -5,6 +5,7 @@ import {
   Modal,
   TouchableOpacity,
   TextInput,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import React, { useState } from 'react';
 import { useGlobalContext } from '../context/GlobalProvider';
@@ -31,38 +32,46 @@ const NewCategoryModal = ({
       transparent={true}
       animationType="fade"
     >
-      <View
-        style={{
-          backgroundColor: 'rgba(0, 0, 0, 0.0)',
-        }}
-        className="flex-1 justify-center items-center z-1 "
+      <TouchableWithoutFeedback
+        onPress={() => setIsNewCategoryModalVisible(false)}
       >
-        <View className="bg-white p-2 m-2 rounded-md w-5/6 h-96 justify-center">
-          <View className="">
-            <Text className="">Add new category</Text>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <TouchableWithoutFeedback>
+            <View className="bg-white p-2 m-2 rounded-md w-5/6 h-96 justify-center">
+              <View className="">
+                <TextInput
+                  placeholder="Add new category"
+                  placeholderTextColor={'grey'}
+                  className="h-12 pl-4 w-max border"
+                  onChangeText={setCategory}
+                />
+              </View>
 
-            <TextInput
-              placeholder="category"
-              className="h-12 w-max border"
-              onChangeText={setCategory}
-            />
-          </View>
+              <View className="flex-row justify-between gap-4">
+                <TouchableOpacity
+                  onPress={() => updateCategories(false)}
+                  className="bg-blue-500 h-12 flex-1 rounded-md justify-center items-center mb-4"
+                >
+                  <Text className="text-white font-semibold">Add</Text>
+                </TouchableOpacity>
 
-          <TouchableOpacity
-            onPress={() => updateCategories(false)}
-            className="bg-green-500 h-12 rounded-md justify-center items-center mt-6"
-          >
-            <Text className="font-bold text-lg">Add</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => setIsNewCategoryModalVisible(false)}
-            className="bg-red-500 h-12 rounded-md justify-center items-center mt-6"
-          >
-            <Text className="font-bold text-lg">Close</Text>
-          </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setIsNewCategoryModalVisible(false)}
+                  className="bg-red-500 h-12 flex-1 rounded-md justify-center items-center"
+                >
+                  <Text className="text-white font-semibold">Close</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </TouchableWithoutFeedback>
         </View>
-      </View>
+      </TouchableWithoutFeedback>
     </Modal>
   );
 };

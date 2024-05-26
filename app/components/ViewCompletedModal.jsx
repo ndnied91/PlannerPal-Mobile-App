@@ -1,42 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList } from 'react-native';
-import { useUser } from '@clerk/clerk-react';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
-import { supabase } from '../../utils/SupabaseConfig';
 import { useGlobalContext } from '../context/GlobalProvider';
-// import TodoItem from './TodoItem';
-
-import SingleTodo from './MainTodoItems/SingleTodo';
+import CompletedTodo from './CompletedTodo';
+import { AntDesign } from '@expo/vector-icons';
 
 const ViewCompletedModal = ({
   isCompletedModalVisible,
   closeModal,
   navigation,
 }) => {
-  const { sortedTodos, todos, setTodos } = useGlobalContext();
-
+  const { sortedTodos } = useGlobalContext();
   const completedTodos = sortedTodos.filter((item) => item.isCompleted);
 
-  const handleCheckboxChange = (id) => {
-    // Update the state variable to force a rerender
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) =>
-        todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo
-      )
-    );
-    // Increment the forceRerender variable
-  };
-
-  const renderItem = ({ item }) => {
+  const renderItem = (item) => {
     return (
-      item.isCompleted && (
-        <SingleTodo
+      item?.isCompleted && (
+        <CompletedTodo
           item={item}
-          onCheckboxChange={() => handleCheckboxChange(item.id)}
           navigation={navigation}
+          closeModal={closeModal}
         />
       )
+    );
+  };
+
+  itemSeparatorComponent = () => {
+    return (
+      <View
+        style={{
+          height: '100%',
+          width: 5,
+        }}
+      />
     );
   };
 
@@ -45,19 +40,32 @@ const ViewCompletedModal = ({
       isVisible={isCompletedModalVisible}
       animationIn="slideInUp"
       animationOut="slideOutDown"
-      swipeDirection="down"
+      // swipeDirection="down"
       onSwipeComplete={closeModal}
       onBackdropPress={closeModal}
-      className="m-0 absolute bottom-[-30%]"
+      className="m-0 absolute bottom-[-20%]"
     >
-      <View className="bg-white w-screen h-[85%] p-10">
-        <Text className="font-bold text-xl text-center">Completed Todos</Text>
+      <View className="bg-white w-screen h-screen p-5">
+        <View className="flex-row justify-between items-center mb-2">
+          <Text className="font-bold text-xl mb-2">Completed Todos</Text>
+          <TouchableOpacity className="" onPress={closeModal}>
+            <View className="mb-1">
+              <AntDesign name="close" size={26} color="red" className="pb-2" />
+            </View>
+          </TouchableOpacity>
+        </View>
 
         <FlatList
-          data={todos}
-          renderItem={renderItem}
+          vertical
+          data={completedTodos}
+          renderItem={({ item }) => renderItem(item)}
           keyExtractor={(item) => item.id.toString()}
-          extraData={todos} // Re-render FlatList when forceRerender changes
+          scrollEnabled={true}
+          showsVerticalScrollIndicator={false}
+          style={{
+            maxHeight: '70%',
+          }}
+          ItemSeparatorComponent={() => <View className="m-1" />}
         />
       </View>
     </Modal>

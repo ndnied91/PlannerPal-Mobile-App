@@ -24,7 +24,7 @@ const TodoList = ({ navigation }) => {
   return (
     <SafeAreaView>
       {isPriority && (
-        <View className="h-[35%]">
+        <View className="h-[35%] p-2">
           {/* priority list */}
           <Text className="font-bold text-xl mb-3"> Priority List</Text>
 
@@ -42,7 +42,7 @@ const TodoList = ({ navigation }) => {
         </View>
       )}
 
-      <View className="h-[75%]">
+      <View className="h-[57%] p-2">
         <Text className="font-bold text-xl mb-3"> Current Todos </Text>
         <FlatList
           data={sortedTodos.filter(

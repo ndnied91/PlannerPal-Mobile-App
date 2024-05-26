@@ -5,8 +5,10 @@ import {
   TouchableOpacity,
   TextInput,
   Platform,
-  Button,
   Alert,
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from 'react-native';
 import { useUser } from '@clerk/clerk-react';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -14,6 +16,7 @@ import Modal from 'react-native-modal';
 import { supabase } from '../../utils/SupabaseConfig';
 import { useGlobalContext } from '../context/GlobalProvider';
 import FilterModal from './FilterModal';
+import { AntDesign } from '@expo/vector-icons';
 
 const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
   const { fetchTodos } = useGlobalContext();
@@ -27,7 +30,7 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
   const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   const handleDateChange = (event, date) => {
     setShowPicker(Platform.OS === 'ios');
@@ -46,16 +49,14 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
   };
 
   const resetFormState = () => {
-    setFormData('title', '');
-    setFormData('body', '');
-    setSelectedCategory('');
+    setFormData({ title: '', body: '' });
+    setSelectedCategory('All');
     setSelectedDate(new Date());
     setShowPicker(false);
   };
 
   const handleSubmit = async () => {
     if (formData.title !== '' || formData.body !== '') {
-      if (selectedCategory === '') setSelectedCategory('All');
       try {
         const { data, error } = await supabase
           .from('todos')
@@ -67,7 +68,7 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
               body: formData.body,
               isCompleted: false,
               dueDate: selectedDate,
-              category: selectedCategory,
+              category: selectedCategory || 'All',
             },
           ])
           .select();
@@ -92,7 +93,7 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
     }
   };
 
-  const modalProps = isCategoryModalVisible ? {} : { swipeDirection: 'down' }; // Set your default swipe direction or use a prop to determine the direction
+  const modalProps = isCategoryModalVisible ? {} : { swipeDirection: 'down' };
 
   return (
     <Modal
@@ -102,79 +103,95 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
       onSwipeComplete={closeModal}
       onBackdropPress={closeModal}
       {...modalProps}
-      className="m-0 absolute bottom-[-15%]"
+      className="m-0 absolute bottom-0"
     >
-      <View className="bg-white w-screen h-[75%] p-10">
-        <Text className="font-bold text-xl text-center">Add new todo</Text>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{ flex: 1, justifyContent: 'flex-end' }}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={{ flex: 1 }}>
+            <TouchableWithoutFeedback onPress={closeModal}>
+              <View style={{ flex: 1 }} />
+            </TouchableWithoutFeedback>
+            <View className="bg-white w-screen p-6 pb-10 rounded-lg">
+              <View className="flex-row justify-between items-center pb-3">
+                <Text className="font-bold text-xl">Create</Text>
+                <TouchableOpacity onPress={closeModal}>
+                  <AntDesign
+                    name="close"
+                    size={26}
+                    color="red"
+                    className="pb-2"
+                  />
+                </TouchableOpacity>
+              </View>
 
-        <View>
-          <TextInput
-            className="border border-gray-300 rounded p-2 mb-2"
-            placeholder="Title"
-            value={formData.title}
-            onChangeText={(text) => handleInputChange('title', text)}
-          />
+              <View>
+                <TextInput
+                  placeholderTextColor={'grey'}
+                  className="border border-gray-300 rounded p-5 mb-2"
+                  placeholder="Title"
+                  value={formData.title}
+                  onChangeText={(text) => handleInputChange('title', text)}
+                />
 
-          <TextInput
-            className="border border-gray-300 rounded p-2 mb-2"
-            placeholder="Body"
-            multiline={true}
-            numberOfLines={4}
-            value={formData.body}
-            onChangeText={(text) => handleInputChange('body', text)}
-          />
+                <TextInput
+                  placeholderTextColor={'grey'}
+                  className="border border-gray-300 rounded p-5 mb-2"
+                  placeholder="Content"
+                  multiline={true}
+                  numberOfLines={4}
+                  value={formData.body}
+                  onChangeText={(text) => handleInputChange('body', text)}
+                />
 
-          <View className={`self-start `}>
-            <DateTimePicker
-              value={selectedDate}
-              mode="datetime"
-              display="clock"
-              onChange={handleDateChange}
-            />
-            {/* )} */}
+                <View
+                  className={`flex-row items-center mb-2 border p-2 border-gray-300 rounded`}
+                >
+                  <Text className="text-gray-500"> Select due date </Text>
+                  <DateTimePicker
+                    value={selectedDate}
+                    mode="datetime"
+                    display="clock"
+                    themeVariant="light"
+                    onChange={handleDateChange}
+                  />
+                </View>
+
+                <View className="flex-row items-center p-3 border border-gray-300 rounded mb-10">
+                  <Text className="text-gray-500 pr-2">Select a category </Text>
+                  <TouchableOpacity
+                    onPress={() => setIsCategoryModalVisible(true)}
+                    className="p-2 bg-gray-200 w-32 rounded-lg shadow-md"
+                  >
+                    <Text>{selectedCategory}</Text>
+                  </TouchableOpacity>
+                </View>
+
+                <FilterModal
+                  isCategoryModalVisible={isCategoryModalVisible}
+                  setIsCategoryModalVisible={setIsCategoryModalVisible}
+                  setSelectedCategory={setSelectedCategory}
+                  title={'Select a category'}
+                  createItem={true}
+                  selectedCategory={selectedCategory}
+                  navigation={navigation}
+                />
+
+                <TouchableOpacity
+                  className="bg-blue-500 p-4 rounded-lg "
+                  onPress={handleSubmit}
+                >
+                  <Text className="text-center font-bold tracking-wider text-white">
+                    Create todo
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
-
-          <TouchableOpacity
-            onPress={() => setIsCategoryModalVisible(true)}
-            className="p-2 m-2 mb-12 bg-red-300 w-32 rounded-lg shadow-md"
-          >
-            <Text>
-              {' '}
-              {selectedCategory ? selectedCategory : 'Select Category'}{' '}
-            </Text>
-          </TouchableOpacity>
-
-          <FilterModal
-            isCategoryModalVisible={isCategoryModalVisible}
-            setIsCategoryModalVisible={setIsCategoryModalVisible}
-            setSelectedCategory={setSelectedCategory}
-            title={'Select a category'}
-            createItem={true}
-            selectedCategory={selectedCategory}
-            navigation={navigation}
-          />
-
-          <TouchableOpacity
-            className="bg-green-500 p-4 rounded-lg"
-            onPress={handleSubmit}
-          >
-            <Text className="text-center font-bold tracking-wider">
-              {' '}
-              Create todo{' '}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <TouchableOpacity
-          className="mt-48"
-          style={{ backgroundColor: 'red', padding: 10, borderRadius: 8 }}
-          onPress={closeModal}
-        >
-          <Text style={{ color: 'white', textAlign: 'center' }}>
-            Close Modal
-          </Text>
-        </TouchableOpacity>
-      </View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </Modal>
   );
 };

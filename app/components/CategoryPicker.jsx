@@ -38,7 +38,7 @@ export default CategoryPicker;
 const styles = StyleSheet.create({
   pickerItem: {
     fontSize: 16,
-    color: 'red',
+    color: 'black',
     textTransform: 'capitalize',
   },
 });

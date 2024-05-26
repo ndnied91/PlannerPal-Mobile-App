@@ -13,14 +13,14 @@ import { CheckBox } from '@rneui/themed';
 import React, { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { convertToNormalTime } from '../../utils/utilsFunctions';
-import { FontAwesome5 } from '@expo/vector-icons';
-import { Feather } from '@expo/vector-icons';
+import { FontAwesome5, FontAwesome6, Feather } from '@expo/vector-icons';
+
 import { supabase } from '../../utils/SupabaseConfig';
 import { useGlobalContext } from '../context/GlobalProvider';
 import CountdownComponent from './CountdownComponent';
 
 const TodoDetails = ({ item, navigation }) => {
-  const { fetchTodos } = useGlobalContext();
+  const { fetchTodos, updateCompletion, deleteTodo } = useGlobalContext();
 
   const [itemDetails, setItemDetails] = useState({
     title: item.title,
@@ -192,14 +192,33 @@ const TodoDetails = ({ item, navigation }) => {
           </View>
           {isEditable && (
             <TouchableOpacity
-              className="bg-green-500 mt-24 w-32 self-center p-4 rounded-xl shadow-xl"
+              className="bg-green-500 w-64 self-center p-4 mb-10 rounded-xl shadow-xl"
               onPress={handleSubmit}
             >
               <Text className="text-center">Update Item</Text>
             </TouchableOpacity>
           )}
 
-          {/* <Button title="Go back" onPress={() => navigation.goBack()} /> */}
+          <View className="flex-row justify-around items-center gap-4 p-6">
+            <TouchableOpacity
+              className="bg-green-400 p-2 flex-1 rounded-md flex-row items-center justify-center shadow-md"
+              onPress={() =>
+                updateCompletion(
+                  item,
+                  'Are you sure you want to mark this item as complete?'
+                )
+              }
+            >
+              <Feather name="check-circle" size={24} color="black" />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              className="bg-red-500 p-2 flex-1 rounded-md flex-row items-center justify-center shadow-md"
+              onPress={() => deleteTodo(item.id, navigation.goBack)}
+            >
+              <FontAwesome6 name="trash-can" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </SafeAreaView>
     </View>

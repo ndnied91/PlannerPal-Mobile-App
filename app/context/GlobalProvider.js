@@ -69,11 +69,13 @@ const GlobalProvider = ({ children }) => {
           text: 'Delete',
           onPress: async () => {
             try {
-              const { error } = await supabase
+              const { status, error } = await supabase
                 .from('todos')
                 .delete()
                 .eq('id', id);
-              if (!error) {
+
+              if (status === 204) {
+                console.log(status);
                 if (callback && typeof callback === 'function') {
                   callback(); // Call the callback function
                 }
@@ -92,6 +94,33 @@ const GlobalProvider = ({ children }) => {
       ],
       { cancelable: false }
     );
+  };
+
+  const updateCompletion = async (item, text) => {
+    Alert.alert('Confirm Action', text, [
+      {
+        text: 'Cancel',
+        style: 'destructive',
+        onPress: () => {},
+        textStyle: { color: 'red' },
+      },
+      {
+        text: 'OK',
+        onPress: async () => {
+          try {
+            const { data, error } = await supabase
+              .from('todos')
+              .update({ isCompleted: !item.isCompleted })
+              .eq('id', item.id)
+              .select();
+            //
+            fetchTodos();
+          } catch (e) {
+            console.error('Catch error:', e);
+          }
+        },
+      },
+    ]);
   };
 
   const updatePriorityStatus = async (item, callback) => {
@@ -121,17 +150,6 @@ const GlobalProvider = ({ children }) => {
     }
 
     // alert updated status of todo
-  };
-
-  const updateCompletion = async (id, updatedState) => {
-    const { data, error } = await supabase
-      .from('todos')
-      .update({ isCompleted: updatedState })
-      .eq('id', id)
-      .select();
-
-    // fetchTodos();
-    // setTodos(sortedTodos.map((item) => (item.id === data.id ? data : item)));
   };
 
   return (

@@ -1,41 +1,21 @@
-import React from 'react';
-import { TouchableOpacity, View, Alert } from 'react-native';
-import { MaterialCommunityIcons } from '@expo/vector-icons'; // Assuming you're using Expo
-import { supabase } from '../../../utils/SupabaseConfig';
+import { TouchableOpacity, View, Alert, Text } from 'react-native';
 import { useGlobalContext } from '../../context/GlobalProvider';
+import { Ionicons } from '@expo/vector-icons';
 
-const RoundedCheckbox = ({ id, isCompleted, setIsCompleted }) => {
+const RoundedCheckbox = ({ item }) => {
   const { updateCompletion } = useGlobalContext();
 
   return (
     <TouchableOpacity
-      onPress={() => {
-        Alert.alert(
-          'Confirm Action',
-          'Are you sure you want to make as complete?',
-          [
-            { text: 'Cancel', style: 'cancel' },
-            {
-              text: 'OK',
-              onPress: () => {
-                setIsCompleted(!isCompleted);
-                updateCompletion(id, !isCompleted);
-              },
-            },
-          ]
-        );
-      }}
+      onPress={() =>
+        updateCompletion(
+          item,
+          'Are you sure you want to mark this item as complete?'
+        )
+      }
     >
-      <View className="w-7 h-7 rounded-full border-2 border-black items-center justify-center relative">
-        {isCompleted && (
-          <MaterialCommunityIcons
-            name="check"
-            size={28}
-            color="red"
-            right={1.5}
-            top={0}
-          />
-        )}
+      <View>
+        <Ionicons name="checkmark-circle-outline" size={32} color="grey" />
       </View>
     </TouchableOpacity>
   );
