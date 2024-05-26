@@ -29,6 +29,7 @@ const HomeScreen = ({ navigation }) => {
         isCategoryModalVisible={isCategoryModalVisible}
         setIsCategoryModalVisible={setIsCategoryModalVisible}
         title={'Filter By'}
+        createItem={false}
       />
 
       <View className=" flex-row justify-end pr-4">

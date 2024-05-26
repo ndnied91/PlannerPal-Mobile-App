@@ -7,15 +7,14 @@ const CategoryPicker = ({
   selectedCategory,
   setSelectedCategory,
   createItem,
-  setIsNewCategoryModalVisible,
 }) => {
   const { selectedFilter, setSelectedFilter, categories } = useGlobalContext();
-  console.log(selectedFilter);
 
   const handleChange = (category) => {
     if (createItem) {
       setSelectedCategory(category);
     } else {
+      //here if the component is just filtering and not creating a new category
       setSelectedFilter(category);
     }
   };

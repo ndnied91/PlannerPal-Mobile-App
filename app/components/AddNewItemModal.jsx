@@ -19,8 +19,10 @@ import FilterModal from './FilterModal';
 import { AntDesign } from '@expo/vector-icons';
 
 const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
-  const { fetchTodos } = useGlobalContext();
+  const { fetchTodos, selectedFilter } = useGlobalContext();
   const { user } = useUser();
+
+  console.log(selectedFilter);
 
   const [formData, setFormData] = useState({
     title: '',
@@ -28,11 +30,11 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
   });
 
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [showPicker, setShowPicker] = useState(false);
+  const [setShowPicker] = useState(false);
   const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const handleDateChange = (event, date) => {
+  const handleDateChange = (date) => {
     setShowPicker(Platform.OS === 'ios');
     if (date) {
       setSelectedDate(date);
@@ -48,7 +50,7 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
 
   const resetFormState = () => {
     setFormData({ title: '', body: '' });
-    setSelectedCategory('All');
+    setSelectedCategory(selectedFilter);
     setSelectedDate(new Date());
     setShowPicker(false);
   };

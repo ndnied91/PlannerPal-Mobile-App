@@ -13,9 +13,7 @@ const SingleTodo = ({ item, navigation }) => {
     <View>
       <View className="flex-row p-6 !pl-3 !pr-3 rounded-sm shadow bg-gray-200 justify-between">
         <View className="flex-col ">
-          <Text>
-            {item.title}:{item.id}
-          </Text>
+          <Text className="font-semibold">{item.title}</Text>
           <Text style={{ fontSize: 14, color: 'gray' }}>
             {convertToNormalTime(item.dueDate, 'short')}
           </Text>

@@ -1,4 +1,4 @@
-import { SafeAreaView, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { View, Text } from 'react-native';
 
@@ -16,8 +16,29 @@ const SwipeableRow = ({ item, navigation }) => {
 };
 
 const TodoList = ({ navigation }) => {
-  const { sortedTodos } = useGlobalContext();
-  const isPriority = sortedTodos.some(
+  // this component renders the whole list
+  const { selectedFilter, sortedTodos } = useGlobalContext();
+
+  const categoryFilter = (list) => {
+    //responsible for filtering todos
+    if (selectedFilter !== 'All') {
+      return list.filter((item) => item.category === selectedFilter);
+    }
+    return list;
+  };
+
+  const isPriority = categoryFilter(sortedTodos).some(
+    // checks if there are priority items
+    (item) => item.isPriority && !item.isCompleted
+  );
+
+  const regularList = sortedTodos.filter(
+    //renders regular list
+    (item) => !item.isPriority && !item.isCompleted
+  );
+
+  const priorityList = sortedTodos.filter(
+    //renders regular list
     (item) => item.isPriority && !item.isCompleted
   );
 
@@ -29,9 +50,7 @@ const TodoList = ({ navigation }) => {
           <Text className="font-bold text-xl mb-3"> Priority List</Text>
 
           <FlatList
-            data={sortedTodos.filter(
-              (item) => item.isPriority && !item.isCompleted
-            )}
+            data={categoryFilter(priorityList)}
             ItemSeparatorComponent={() => <View className="m-1" />}
             renderItem={({ item, index }) => (
               <SwipeableRow item={item} index={index} navigation={navigation} />
@@ -42,12 +61,10 @@ const TodoList = ({ navigation }) => {
         </View>
       )}
 
-      <View className="h-[57%] p-2">
+      <View className={`h-[${isPriority ? '57%' : '100%'}] p-2 `}>
         <Text className="font-bold text-xl mb-3"> Current Todos </Text>
         <FlatList
-          data={sortedTodos.filter(
-            (item) => !item.isPriority && !item.isCompleted
-          )}
+          data={categoryFilter(regularList)}
           ItemSeparatorComponent={() => <View className="m-1" />}
           renderItem={({ item, index }) => (
             <SwipeableRow item={item} index={index} navigation={navigation} />
