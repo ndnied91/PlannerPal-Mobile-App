@@ -74,7 +74,6 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
           .select();
 
         fetchTodos();
-
         resetFormState();
         closeModal();
 

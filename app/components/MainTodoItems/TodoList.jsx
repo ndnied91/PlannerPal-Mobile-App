@@ -45,11 +45,12 @@ const TodoList = ({ navigation }) => {
   return (
     <SafeAreaView>
       {isPriority && (
-        <View className="h-[35%] p-2">
+        <View className="max-h-[35%] p-2 ">
           {/* priority list */}
           <Text className="font-bold text-xl mb-3"> Priority List</Text>
 
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={categoryFilter(priorityList)}
             ItemSeparatorComponent={() => <View className="m-1" />}
             renderItem={({ item, index }) => (
@@ -61,9 +62,10 @@ const TodoList = ({ navigation }) => {
         </View>
       )}
 
-      <View className={`h-[${isPriority ? '57%' : '100%'}] p-2 `}>
+      <View className={`h-[${isPriority ? '60%' : '100%'}] p-2 pb-10`}>
         <Text className="font-bold text-xl mb-3"> Current Todos </Text>
         <FlatList
+          showsVerticalScrollIndicator={false}
           data={categoryFilter(regularList)}
           ItemSeparatorComponent={() => <View className="m-1" />}
           renderItem={({ item, index }) => (

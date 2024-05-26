@@ -32,26 +32,22 @@ const HomeScreen = ({ navigation }) => {
         createItem={false}
       />
 
-      <View className=" flex-row justify-end pr-4">
-        <View className="flex-row items-center gap-1">
-          <Text
-            className="text-gray-500"
+      <View className="flex-row justify-end pr-4">
+        <View className="flex-row items-center">
+          <TouchableOpacity
+            className="flex-row items-center"
             onPress={() => setIsCategoryModalVisible(true)}
           >
-            {selectedFilter}
-          </Text>
-          <Ionicons
-            name="filter-circle-sharp"
-            size={30}
-            color="green"
-            onPress={() => setIsCategoryModalVisible(true)}
-          />
-          <FontAwesome
-            name="sort"
-            size={30}
-            color="green"
+            <Text className="text-gray-500">{selectedFilter}</Text>
+            <Ionicons name="filter-circle-sharp" size={30} color="#228B22" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            className="pl-2"
             onPress={() => setIsSortModalVisible(true)}
-          />
+          >
+            <FontAwesome name="sort" size={30} color="#228B22" />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -62,9 +58,9 @@ const HomeScreen = ({ navigation }) => {
       {/*  new todo modal and button */}
       <TouchableOpacity
         onPress={() => setPlusIsModalVisible(true)}
-        className="mb-10 absolute bottom-0 right-2"
+        className="mb-1 absolute bottom-2 right-2 bg-blue-600 p-3 rounded-full shadow-md"
       >
-        <Entypo name="add-to-list" size={30} color="black" />
+        <Entypo name="add-to-list" size={30} color="white" />
       </TouchableOpacity>
       <AddNewItemModal
         isPlusModalVisible={isPlusModalVisible}
@@ -75,9 +71,9 @@ const HomeScreen = ({ navigation }) => {
       {/*  completed todos modal and button */}
       <TouchableOpacity
         onPress={() => setIsCompletedModalVisible(true)}
-        className="mb-10 absolute bottom-0 left-2"
+        className="mb-1 absolute bottom-2 left-2 bg-green-700 p-3 rounded-full shadow-md"
       >
-        <MaterialIcons name="download-done" size={35} color="green" />
+        <MaterialIcons name="download-done" size={35} color="white" />
       </TouchableOpacity>
       <ViewCompletedModal
         navigation={navigation}
