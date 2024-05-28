@@ -88,8 +88,7 @@ const TodoDetails = ({ item, navigation }) => {
                 Todo Details Page
               </Text>
 
-              <View className="flex-row justify-center">
-                <Text className="text-lg"> Due in: </Text>
+              <View className="flex-row justify-center ">
                 <CountdownComponent targetDate={targetDate} />
               </View>
 

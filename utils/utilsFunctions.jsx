@@ -4,16 +4,21 @@ export const convertToNormalTime = (dateTimeString, format) => {
 
   let options = {};
 
-  if (format === 'short') {
+  if (format === 'v_short') {
     options = {
-      // year: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+      timeZone: 'EST', // Assuming the input string is in UTC timezone
+    };
+  } else if (format === 'short') {
+    options = {
       month: '2-digit',
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
-      // second: '2-digit',
       hour12: true,
-      // timeZone: 'EST', // Assuming the input string is in UTC timezone
+      timeZone: 'EST', // Assuming the input string is in UTC timezone
     };
   } else {
     options = {
@@ -24,7 +29,7 @@ export const convertToNormalTime = (dateTimeString, format) => {
       minute: '2-digit',
       second: '2-digit',
       hour12: true,
-      // timeZone: 'EST', // Assuming the input string is in UTC timezone
+      timeZone: 'EST', // Assuming the input string is in UTC timezone
     };
   }
 

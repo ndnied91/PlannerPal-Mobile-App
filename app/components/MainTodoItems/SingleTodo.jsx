@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import { RectButton } from 'react-native-gesture-handler';
 import { View, Text, TouchableOpacity } from 'react-native';
 
 import { Feather } from '@expo/vector-icons';

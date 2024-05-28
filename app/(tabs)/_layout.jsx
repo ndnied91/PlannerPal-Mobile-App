@@ -29,9 +29,9 @@ const TabsPage = () => {
       }}
     >
       <Tabs.Screen
-        name="home"
+        name="OverviewScreenStack"
         options={{
-          headerTitle: 'Home',
+          headerTitle: 'Overview',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home-outline" size={size} color={color} />
           ),
