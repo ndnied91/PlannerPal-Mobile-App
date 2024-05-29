@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -17,6 +17,7 @@ import { supabase } from '../../utils/SupabaseConfig';
 import { useGlobalContext } from '../context/GlobalProvider';
 import FilterModal from './FilterModal';
 import { AntDesign } from '@expo/vector-icons';
+import ColorPicker from './ColorPicker';
 
 const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
   const { fetchTodos, selectedFilter } = useGlobalContext();
@@ -177,6 +178,8 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
                   selectedCategory={selectedCategory}
                   navigation={navigation}
                 />
+
+                <ColorPicker />
 
                 <TouchableOpacity
                   className="bg-blue-500 p-4 rounded-lg "

@@ -1,4 +1,10 @@
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import { useGlobalContext } from '../context/GlobalProvider';
 import CompletedTodo from './CompletedTodo';
@@ -52,6 +58,8 @@ const ViewCompletedModal = ({
             <View className="mb-1">
               <AntDesign name="close" size={26} color="red" className="pb-2" />
             </View>
+
+            {/* <Text className=" text-white tracking-wider">Close</Text> */}
           </TouchableOpacity>
         </View>
 
