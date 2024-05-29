@@ -12,16 +12,18 @@ import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 import { useState } from 'react';
 import { convertToNormalTime } from '../../utils/utilsFunctions';
+import ViewPastDue from './ViewPastDue';
 
 const Overview = () => {
   const navigation = useNavigation();
   const { user } = useUser();
   const { sortedTodos } = useGlobalContext();
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [isPastDueExpanded, setIsPastDueExpanded] = useState(false);
 
   const activeTodos = sortedTodos.filter((item) => !item.isCompleted);
   const pastDue = sortedTodos.filter(
-    (item) => new Date(item.dueDate).getTime() < Date.now()
+    (item) => new Date(item.dueDate).getTime() < Date.now() && !item.isCompleted
   );
 
   const currentDayTodos = activeTodos.filter((todo) => {
@@ -48,12 +50,12 @@ const Overview = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
-      <View className="p-8 bg-gray-50 rounded-lg shadow-md h-screen">
+      <View className="p-6  bg-gray-50 rounded-lg shadow-md h-screen">
         <Text className="text-2xl font-bold text-gray-800 mb-4">
           Welcome, {user?.firstName}!
         </Text>
 
-        <View className="flex-row justify-between mb-6">
+        <View className="flex-row justify-between mb-4">
           <View className="flex-1 mr-2 p-4 bg-green-300 rounded-lg shadow-sm border border-green-500">
             <Text className="text-lg font-semibold text-gray-800">Active</Text>
             <Text className="text-5xl font-bold text-gray-800">
@@ -71,6 +73,8 @@ const Overview = () => {
           </View>
         </View>
 
+        <ViewPastDue pastDue={pastDue} navigation={navigation} />
+
         <View>
           {currentDate.toLocaleDateString() ===
           new Date().toLocaleDateString() ? (
@@ -84,7 +88,6 @@ const Overview = () => {
           )}
 
           <View className="flex-row justify-between mb-3 items-center">
-            {/* this renders either the current date or the previous button */}
             {currentDate.toLocaleDateString() ===
             new Date().toLocaleDateString() ? (
               <Text className="text-gray-600 font-semibold">
