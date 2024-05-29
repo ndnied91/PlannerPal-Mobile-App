@@ -12,7 +12,7 @@ const OverviewTodo = ({ item, navigation }) => {
           {item.title}
         </Text>
         <Text className="text-sm text-gray-500">
-          {convertToNormalTime(item.dueDate, 'v_short')}
+          {convertToNormalTime(item.dueDate, 'short')}
         </Text>
       </View>
 

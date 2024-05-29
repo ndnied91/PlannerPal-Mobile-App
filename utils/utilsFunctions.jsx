@@ -4,7 +4,7 @@ export const convertToNormalTime = (dateTimeString, format) => {
 
   let options = {};
 
-  if (format === 'v_short') {
+  if (format === 'just_time') {
     options = {
       hour: '2-digit',
       minute: '2-digit',
@@ -18,6 +18,12 @@ export const convertToNormalTime = (dateTimeString, format) => {
       hour: '2-digit',
       minute: '2-digit',
       hour12: true,
+      timeZone: 'EST', // Assuming the input string is in UTC timezone
+    };
+  } else if (format === 'date_no_year') {
+    options = {
+      month: '2-digit',
+      day: '2-digit',
       timeZone: 'EST', // Assuming the input string is in UTC timezone
     };
   } else {

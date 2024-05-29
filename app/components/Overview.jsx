@@ -10,36 +10,45 @@ import { useGlobalContext } from '../context/GlobalProvider';
 import OverviewTodo from './OverviewTodo';
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
+import { useState } from 'react';
+import { convertToNormalTime } from '../../utils/utilsFunctions';
 
 const Overview = () => {
   const navigation = useNavigation();
   const { user } = useUser();
   const { sortedTodos } = useGlobalContext();
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const activeTodos = sortedTodos.filter((item) => !item.isCompleted);
   const pastDue = sortedTodos.filter(
     (item) => new Date(item.dueDate).getTime() < Date.now()
   );
 
-  const todayTodos = sortedTodos.filter((todo) => {
+  const currentDayTodos = activeTodos.filter((todo) => {
     const dueDate = new Date(todo.dueDate);
-    const today = new Date();
+
     return (
-      dueDate.getDate() === today.getDate() &&
-      dueDate.getMonth() === today.getMonth() &&
-      dueDate.getFullYear() === today.getFullYear()
+      dueDate.getDate() === currentDate.getDate() &&
+      dueDate.getMonth() === currentDate.getMonth() &&
+      dueDate.getFullYear() === currentDate.getFullYear()
     );
   });
 
-  const currentDate = new Date().toLocaleDateString();
+  const updateCurrentDate = (days) => {
+    setCurrentDate((prevDate) => {
+      const newDate = new Date(prevDate);
+      newDate.setDate(newDate.getDate() + days);
+      return newDate;
+    });
+  };
 
   const renderItem = ({ item }) => (
     <OverviewTodo item={item} navigation={navigation} />
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-white">
-      <View className="p-8 bg-white rounded-lg shadow-md h-screen">
+    <SafeAreaView className="flex-1 bg-gray-50">
+      <View className="p-8 bg-gray-50 rounded-lg shadow-md h-screen">
         <Text className="text-2xl font-bold text-gray-800 mb-4">
           Welcome, {user?.firstName}!
         </Text>
@@ -63,26 +72,57 @@ const Overview = () => {
         </View>
 
         <View>
-          <Text className="text-lg font-semibold text-gray-800">
-            Today's Agenda
-          </Text>
-          <View className="flex-row justify-between mb-3 items-center">
-            <Text className="text-md font-semibold text-gray-500">
-              {currentDate}
+          {currentDate.toLocaleDateString() ===
+          new Date().toLocaleDateString() ? (
+            <Text className="text-lg font-semibold text-gray-800 mb-1">
+              Today's Agenda
             </Text>
-            <TouchableOpacity className="text-md font-semibold text-gray-500 flex-row items-center bg-gray-100 border border-gray-300 p-2 rounded-md shadow-md">
+          ) : (
+            <Text className="text-lg font-semibold text-gray-800 mb-1">
+              {convertToNormalTime(currentDate, 'date_no_year')} Agenda
+            </Text>
+          )}
+
+          <View className="flex-row justify-between mb-3 items-center">
+            {/* this renders either the current date or the previous button */}
+            {currentDate.toLocaleDateString() ===
+            new Date().toLocaleDateString() ? (
+              <Text className="text-gray-600 font-semibold">
+                {currentDate.toLocaleDateString()}
+              </Text>
+            ) : (
+              <TouchableOpacity
+                className="text-md font-semibold text-gray-500 flex-row items-center bg-gray-100 border border-gray-300 p-2 rounded-md shadow-md"
+                onPress={() => updateCurrentDate(-1)}
+              >
+                <Feather name="arrow-left" size={16} color="gray" />
+                <Text className="font-semibold"> Previous Day</Text>
+              </TouchableOpacity>
+            )}
+
+            <TouchableOpacity
+              className="text-md font-semibold text-gray-500 flex-row items-center bg-gray-100 border border-gray-300 p-2 rounded-md shadow-md"
+              onPress={() => updateCurrentDate(1)}
+            >
               <Text className="font-semibold"> Next day </Text>
               <Feather name="arrow-right" size={16} color="gray" />
             </TouchableOpacity>
           </View>
 
-          <FlatList
-            data={todayTodos}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id.toString()}
-            scrollEnabled={true}
-            contentContainerStyle={{ paddingBottom: 20 }}
-          />
+          {currentDayTodos.length > 0 ? (
+            <FlatList
+              data={currentDayTodos}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id.toString()}
+              scrollEnabled={true}
+              contentContainerStyle={{ paddingBottom: 20 }}
+            />
+          ) : (
+            <Text className="mt-5 text-lg text-gray-400 italic text-center">
+              {' '}
+              No items scheduled for this date{' '}
+            </Text>
+          )}
         </View>
       </View>
     </SafeAreaView>

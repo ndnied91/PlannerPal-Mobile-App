@@ -24,13 +24,13 @@ const AppleStyleSwipeableRow = ({ children, item }) => {
 
     return (
       <RectButton
-        className="items-center flex-row bg-yellow-300 text-center pl-9"
+        className="items-center justify-center flex-row bg-yellow-300 pl-9 mt-1 mb-3 w-20"
         onPress={pressHandler}
       >
         <Animated.Text
           style={[styles.actionText, { transform: [{ translateX: trans }] }]}
         >
-          <FontAwesome name="exclamation-circle" size={32} color="black" />
+          <FontAwesome name="exclamation-circle" size={28} color="black" />
         </Animated.Text>
       </RectButton>
     );
@@ -46,7 +46,7 @@ const AppleStyleSwipeableRow = ({ children, item }) => {
     return (
       <Animated.View style={{ flex: 1, transform: [{ translateX: 0 }] }}>
         <RectButton
-          className="h-full items-center flex-row bg-red-600 justify-center"
+          className="h-full items-center flex-row bg-red-600 justify-center p-3"
           style={{ backgroundColor: color }}
           onPress={pressHandler}
         >
@@ -58,13 +58,13 @@ const AppleStyleSwipeableRow = ({ children, item }) => {
 
   const renderRightActions = (progress) => (
     <View
+      className="pt-1 pb-3 w-20"
       style={{
-        width: 80,
         flexDirection: I18nManager.isRTL ? 'row-reverse' : 'row',
       }}
     >
       {renderRightAction(
-        <FontAwesome6 name="trash-alt" size={32} color="black" />,
+        <FontAwesome6 name="trash-alt" size={25} color="black" />,
         '#dd2c00',
         72,
         progress

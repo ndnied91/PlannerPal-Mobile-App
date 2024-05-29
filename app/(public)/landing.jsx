@@ -12,7 +12,7 @@ const LandingPage = () => {
 
       <View className="w-full items-center mt-10">
         <TouchableOpacity
-          className="bg-gray-200 flex-row items-center justify-center w-1/2 p-6 rounded-xl"
+          className="bg-white flex-row items-center justify-center w-1/2 p-6 rounded-xl"
           onPress={() => {
             router.push('/login');
           }}

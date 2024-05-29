@@ -198,26 +198,28 @@ const TodoDetails = ({ item, navigation }) => {
             </TouchableOpacity>
           )}
 
-          <View className="flex-row justify-around items-center gap-4 p-6">
-            <TouchableOpacity
-              className="bg-green-400 p-2 flex-1 rounded-md flex-row items-center justify-center shadow-md"
-              onPress={() =>
-                updateCompletion(
-                  item,
-                  'Are you sure you want to mark this item as complete?'
-                )
-              }
-            >
-              <Feather name="check-circle" size={24} color="black" />
-            </TouchableOpacity>
+          {!isEditable && (
+            <View className="flex-row justify-around items-center gap-4 p-6 ">
+              <TouchableOpacity
+                className="bg-green-400 p-2 flex-1 rounded-md flex-row items-center justify-center shadow-md"
+                onPress={() =>
+                  updateCompletion(
+                    item,
+                    'Are you sure you want to mark this item as complete?'
+                  )
+                }
+              >
+                <Feather name="check-circle" size={24} color="black" />
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              className="bg-red-500 p-2 flex-1 rounded-md flex-row items-center justify-center shadow-md"
-              onPress={() => deleteTodo(item.id, navigation.goBack)}
-            >
-              <FontAwesome6 name="trash-can" size={24} color="black" />
-            </TouchableOpacity>
-          </View>
+              <TouchableOpacity
+                className="bg-red-500 p-2 flex-1 rounded-md flex-row items-center justify-center shadow-md"
+                onPress={() => deleteTodo(item.id, navigation.goBack)}
+              >
+                <FontAwesome6 name="trash-can" size={24} color="black" />
+              </TouchableOpacity>
+            </View>
+          )}
         </ScrollView>
       </SafeAreaView>
     </View>

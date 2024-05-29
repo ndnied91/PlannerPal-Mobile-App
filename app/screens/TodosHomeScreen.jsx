@@ -20,7 +20,7 @@ const HomeScreen = ({ navigation }) => {
   const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
   const { selectedFilter } = useGlobalContext();
   return (
-    <SafeAreaView className="h-full bg-slate-100 w-screen">
+    <SafeAreaView className="h-full bg-gray-50 w-screen">
       <SortModal
         isSortModalVisible={isSortModalVisible}
         setIsSortModalVisible={setIsSortModalVisible}
