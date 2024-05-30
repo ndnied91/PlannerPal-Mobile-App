@@ -29,12 +29,13 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
   });
 
   const [selectedDate, setSelectedDate] = useState(new Date());
+  // console.log('selectedDate', selectedDate);
   const [showPicker, setShowPicker] = useState(false);
   const [isCategoryModalVisible, setIsCategoryModalVisible] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [selectedColor, setSelectedColor] = useState(null);
 
-  const handleDateChange = (event, date) => {
+  const handleDateChange = (date) => {
+    console.log('date', date);
     setShowPicker(Platform.OS === 'ios');
     if (date) {
       setSelectedDate(date);
@@ -69,7 +70,6 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
               isCompleted: false,
               dueDate: selectedDate,
               category: selectedCategory || 'All',
-              bg_color: selectedColor,
             },
           ])
           .select();
@@ -149,11 +149,13 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
                 <View
                   className={`flex-row items-center mb-2 border p-2 border-gray-300 rounded`}
                 >
-                  <Text className="text-gray-500">Due date</Text>
+                  <Text className="text-gray-500"> Due date </Text>
                   <DateTimePicker
                     value={selectedDate}
                     mode="datetime"
-                    display="default"
+                    display="clock"
+                    themeVariant="light"
+                    // onChange={(date) => console.log('dateIs', date)}
                     onChange={handleDateChange}
                   />
                 </View>
@@ -162,7 +164,7 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
                   className="flex-row items-center p-3 border border-gray-300 rounded mb-10"
                   onPress={() => setIsCategoryModalVisible(true)}
                 >
-                  <Text className="text-gray-500 pr-2">Category</Text>
+                  <Text className="text-gray-500 pr-2">Category </Text>
                   <View className="p-2 bg-gray-200 w-32 rounded-lg shadow-md">
                     <Text>{selectedCategory}</Text>
                   </View>
@@ -178,14 +180,10 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
                   navigation={navigation}
                 />
 
-                <ColorPicker
-                  isEditable
-                  selectedColor={selectedColor}
-                  setSelectedColor={setSelectedColor}
-                />
+                <ColorPicker />
 
                 <TouchableOpacity
-                  className="bg-blue-500 p-4 rounded-lg"
+                  className="bg-blue-500 p-4 rounded-lg "
                   onPress={handleSubmit}
                 >
                   <Text className="text-center font-bold tracking-wider text-white">

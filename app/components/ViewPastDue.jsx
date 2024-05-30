@@ -1,11 +1,6 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  Animated,
-  Easing,
-} from 'react-native';
+import { Text, FlatList, Animated, Easing } from 'react-native';
+
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import React, { useState, useRef, useEffect } from 'react';
 import { Feather } from '@expo/vector-icons';
 import OverviewTodo from './OverviewTodo';
@@ -32,7 +27,7 @@ const ViewPastDue = ({ pastDue, navigation }) => {
       style={{
         height: heightAnimation,
       }}
-      className="bg-red-100 rounded-lg shadow-sm border border-red-500 mb-4 p-2"
+      className="bg-red-100 rounded-lg shadow-sm border border-red-500 mb-4 p-2 z-50"
     >
       <TouchableOpacity
         activeOpacity={1}

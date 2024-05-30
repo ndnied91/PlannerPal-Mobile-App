@@ -4,31 +4,64 @@ import { Feather } from '@expo/vector-icons';
 import RoundedCheckbox from './RoundedCheckbox';
 import { convertToNormalTime } from '../../../utils/utilsFunctions';
 
-const SingleTodo = ({ item, navigation }) => {
-  return (
-    <View className="flex-row p-3 bg-white rounded-lg shadow-sm mb-2 border border-gray-300 justify-between items-center">
-      <View className="flex-col">
-        <Text className="text-lg font-semibold text-gray-800">
-          {item.title}
-        </Text>
-        <Text className="text-sm text-gray-500">
-          {convertToNormalTime(item.dueDate, 'short')}
-        </Text>
+const SingleTodo = ({ item, navigation, searchBar }) => {
+  if (!searchBar) {
+    return (
+      <View
+        className={`flex-row p-3 rounded-lg shadow-sm mb-2 border justify-between items-center`}
+        style={{
+          borderColor: item.bg_color !== null ? item.bg_color : '#E0E0E0',
+          backgroundColor: item.bg_color !== null ? item.bg_color : 'white',
+        }}
+      >
+        <View className="flex-col">
+          <Text className="text-lg font-semibold text-gray-800">
+            {item.title}
+          </Text>
+          <Text className="text-sm text-gray-500">
+            {convertToNormalTime(item.dueDate, 'short')}
+          </Text>
+        </View>
+
+        <View className="flex-row items-center">
+          <RoundedCheckbox
+            item={item}
+            isCompleted={item?.isCompleted || false}
+          />
+
+          <TouchableOpacity
+            className="ml-2 flex-row items-center border border-gray-300 bg-gray-100 rounded-lg p-2"
+            onPress={() => navigation.navigate('ItemDetails', { item })}
+          >
+            <Text className="text-gray-600"> Details </Text>
+            <Feather name="arrow-right" size={16} color="gray" />
+          </TouchableOpacity>
+        </View>
       </View>
-
-      <View className="flex-row items-center">
-        <RoundedCheckbox item={item} isCompleted={item?.isCompleted || false} />
-
+    );
+  } else {
+    return (
+      <View>
         <TouchableOpacity
-          className="ml-2 flex-row items-center border border-gray-300 bg-gray-100 rounded-lg p-2"
+          activeOpacity={1}
           onPress={() => navigation.navigate('ItemDetails', { item })}
+          className={`flex-row p-5 justify-between items-center`}
+          style={{
+            backgroundColor: item.bg_color !== null ? item.bg_color : 'white',
+          }}
         >
-          <Text className="text-gray-600"> Details </Text>
-          <Feather name="arrow-right" size={16} color="gray" />
+          <View className="flex-row items-center justify-between w-full">
+            <Text className="text-lg font-semibold text-gray-800">
+              {item.title}
+            </Text>
+            <Text className="text-sm text-gray-500">
+              {convertToNormalTime(item.dueDate, 'short')}
+            </Text>
+          </View>
         </TouchableOpacity>
       </View>
-    </View>
-  );
+    );
+  }
 };
 
 export default SingleTodo;
