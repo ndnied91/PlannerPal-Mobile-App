@@ -6,8 +6,14 @@ import SingleTodo from './MainTodoItems/SingleTodo';
 
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const SearchBar = ({ sortedTodos, navigation }) => {
-  const [searchTerm, setSearchTerm] = useState('');
+const SearchBar = ({ sortedTodos, navigation, searchTerm, setSearchTerm }) => {
+  const handleInputChange = (text) => {
+    setSearchTerm(text);
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm('');
+  };
 
   const results = sortedTodos.filter(
     (todo) =>
@@ -17,30 +23,28 @@ const SearchBar = ({ sortedTodos, navigation }) => {
 
   return (
     <View>
-      <View className="relative">
-        <View className="border border-gray-300 flex-row items-center p-2 rounded-full bg-gray-50 shadow-md">
+      <View className="items-center">
+        <View className="relative z-50 border border-gray-300 flex-row items-center p-2 mb-1 rounded-full bg-gray-50 shadow-md">
           <FontAwesome
             name="search"
             size={26}
             color="#9CA3AF"
-            style={{
-              paddingLeft: 4,
-            }}
+            style={{ paddingLeft: 4 }}
           />
-
           <TextInput
             value={searchTerm}
-            className="pl-1 flex-1 h-full "
+            className="pl-1 flex-1 h-full"
             placeholder="Search for todo"
             placeholderTextColor="#9CA3AF"
             style={{ fontStyle: 'normal' }}
             autoCorrect={false}
-            placeholderStyle={{ fontStyle: 'italic' }}
-            onChangeText={setSearchTerm}
+            onChangeText={handleInputChange}
           />
-
           {searchTerm !== '' && (
-            <TouchableOpacity className="" onPress={() => setSearchTerm('')}>
+            <TouchableOpacity
+              onPress={handleClearSearch}
+              className="h-6 items-center justify-end flex-row  w-8"
+            >
               <Entypo
                 name="circle-with-cross"
                 size={18}
@@ -52,9 +56,10 @@ const SearchBar = ({ sortedTodos, navigation }) => {
             </TouchableOpacity>
           )}
         </View>
+
         {searchTerm.length > 0 && (
-          <View className="absolute top-full w-full shadow-lg">
-            {results.slice(0, 4).map((item, index) => (
+          <View className="absolute top-full w-11/12">
+            {results.slice(0, 6).map((item, index) => (
               <SingleTodo
                 key={index}
                 item={item}

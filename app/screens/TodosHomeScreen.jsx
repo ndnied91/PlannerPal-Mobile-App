@@ -73,7 +73,7 @@ const HomeScreen = ({ navigation }) => {
         onPress={() => setIsCompletedModalVisible(true)}
         className="mb-1 absolute bottom-2 left-2 bg-green-700 p-3 rounded-full shadow-md"
       >
-        <MaterialIcons name="download-done" size={35} color="white" />
+        <MaterialIcons name="download-done" size={30} color="white" />
       </TouchableOpacity>
       <ViewCompletedModal
         navigation={navigation}

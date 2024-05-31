@@ -15,6 +15,7 @@ const GlobalProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [categories, setCategories] = useState([]);
+  const [selectedColorFilter, setSelectedColorFilter] = useState('');
 
   const sortedTodos = todos.slice().sort((a, b) => {
     if (sortOption === 'default') {
@@ -174,6 +175,8 @@ const GlobalProvider = ({ children }) => {
         setCategories,
         updatePriorityStatus,
         updateCompletion,
+        selectedColorFilter,
+        setSelectedColorFilter,
       }}
     >
       {children}

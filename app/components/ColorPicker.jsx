@@ -1,4 +1,6 @@
 import { Text, View, FlatList, TouchableOpacity } from 'react-native';
+import { colors } from '../../utils/utilsFunctions';
+import { hexToRGB } from '../../utils/utilsFunctions';
 
 const ColorPicker = ({
   selectedColor,
@@ -6,26 +8,9 @@ const ColorPicker = ({
   itemDetails,
   isEditable,
 }) => {
-  const colors = [
-    { id: 1, title: 'Lavender', hex: '#E6E6FA' },
-    { id: 2, title: 'Light Coral', hex: '#F08080' },
-    { id: 3, title: 'Peach Puff', hex: '#FFDAB9' },
-    { id: 4, title: 'Honeydew', hex: '#F0FFF0' },
-    { id: 6, title: 'Light Blue', hex: '#ADD8E6' },
-  ];
-
   const renderItem = ({ item }) => {
+    // if (itemDetails && item.title !== 'Clear') {
     // Calculate darker color for border
-    const hexToRGB = (hex) =>
-      hex
-        .replace(
-          /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
-          (m, r, g, b) => '#' + r + r + g + g + b + b
-        )
-        .substring(1)
-        .match(/.{2}/g)
-        .map((x) => parseInt(x, 16));
-
     const rgb = hexToRGB(item.hex);
     const darkerRGB = rgb.map((c) => Math.max(c - 20, 0));
     const darkerHex =
@@ -37,7 +22,6 @@ const ColorPicker = ({
         style={{
           alignItems: 'center',
           justifyContent: 'center',
-          // borderWidth: selectedColor === item.title ? 2 : 1,
           borderWidth: 1,
           borderColor: selectedColor === item.hex ? 'gray' : darkerHex,
           borderRadius: 7,
@@ -52,6 +36,7 @@ const ColorPicker = ({
         ></View>
       </TouchableOpacity>
     );
+    // }
   };
 
   return (

@@ -69,7 +69,7 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
               isCompleted: false,
               dueDate: selectedDate,
               category: selectedCategory || 'All',
-              bg_color: selectedColor,
+              bg_color: selectedColor || '#FFFFFF',
             },
           ])
           .select();

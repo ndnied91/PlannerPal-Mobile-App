@@ -61,3 +61,22 @@ export const hexToRgba = (hex, opacity) => {
   }
   return `rgba(${r},${g},${b},${opacity})`;
 };
+
+export const colors = [
+  { id: 1, title: 'Lavender', hex: '#E6E6FA' },
+  { id: 2, title: 'Light Coral', hex: '#F08080' },
+  { id: 3, title: 'Peach Puff', hex: '#FFDAB9' },
+  { id: 4, title: 'Honeydew', hex: '#F0FFF0' },
+  { id: 6, title: 'Light Blue', hex: '#ADD8E6' },
+  { id: 7, title: 'Clear', hex: '#FFFFFF' },
+];
+
+export const hexToRGB = (hex) =>
+  hex
+    .replace(
+      /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
+      (m, r, g, b) => '#' + r + r + g + g + b + b
+    )
+    .substring(1)
+    .match(/.{2}/g)
+    .map((x) => parseInt(x, 16));

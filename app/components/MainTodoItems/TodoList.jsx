@@ -2,6 +2,7 @@ import { SafeAreaView, FlatList, View, Text } from 'react-native';
 import SingleTodo from './SingleTodo';
 import AppleStyleSwipeableRow from './AppleStylesSwipeableRow';
 import { useGlobalContext } from '../../context/GlobalProvider';
+import ColorFilter from '../ColorFilter';
 
 const SwipeableRow = ({ item, navigation }) => {
   return (
@@ -12,12 +13,30 @@ const SwipeableRow = ({ item, navigation }) => {
 };
 
 const TodoList = ({ navigation }) => {
-  const { selectedFilter, sortedTodos } = useGlobalContext();
+  const { selectedFilter, selectedColorFilter, sortedTodos } =
+    useGlobalContext();
 
   const categoryFilter = (list) => {
-    if (selectedFilter !== 'All') {
+    if (selectedFilter !== 'All' && selectedColorFilter !== '') {
+      // not all and selectedColor
+      return list.filter(
+        (item) =>
+          item.category === selectedFilter &&
+          item.bg_color === selectedColorFilter
+      );
+    } else if (selectedFilter !== 'All' && selectedColorFilter === '') {
+      // not all and NO selectedColor
       return list.filter((item) => item.category === selectedFilter);
+    } else if (selectedFilter === 'All' && selectedColorFilter !== '') {
+      // all and selected color
+      return list.filter(
+        (item) =>
+          item.category === selectedFilter &&
+          item.bg_color === selectedColorFilter
+      );
     }
+
+    //all and no selected color ( everything )
     return list;
   };
 
@@ -52,7 +71,7 @@ const TodoList = ({ navigation }) => {
       )}
 
       <View
-        className={`flex-1 ${isPriority ? 'max-h-[65%]' : 'h-full'} p-2 pb-10`}
+        className={`flex-1 ${isPriority ? 'max-h-[65%]' : 'h-full'} p-2 pb-6`}
       >
         <Text className="font-bold text-xl mb-3">Current Todos</Text>
         <FlatList
@@ -65,6 +84,9 @@ const TodoList = ({ navigation }) => {
           keyExtractor={(item, index) => index.toString()}
           contentContainerStyle="mb-20 pb-20"
         />
+      </View>
+      <View className="items-center -translate-y-3 flex-row justify-center">
+        <ColorFilter />
       </View>
     </SafeAreaView>
   );
