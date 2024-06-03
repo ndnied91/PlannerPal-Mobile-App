@@ -20,8 +20,8 @@ import { AntDesign } from '@expo/vector-icons';
 import ColorPicker from './ColorPicker';
 
 const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
-  const { fetchTodos, selectedFilter } = useGlobalContext();
-  const { user } = useUser();
+  const { fetchTodos, selectedFilter, currentUser } = useGlobalContext();
+  // const { user } = useUser();
 
   const [formData, setFormData] = useState({
     title: '',
@@ -62,7 +62,7 @@ const AddNewItemModal = ({ isPlusModalVisible, closeModal, navigation }) => {
           .from('todos')
           .insert([
             {
-              created_by: user.primaryEmailAddress.emailAddress,
+              created_by: currentUser.primaryEmailAddress.emailAddress,
               isPriority: false,
               title: formData.title,
               body: formData.body,

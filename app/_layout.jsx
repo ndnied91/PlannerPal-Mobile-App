@@ -49,18 +49,34 @@ const tokenCache = {
   },
 };
 
+// const RootLayout = () => {
+//   return (
+//     <GestureHandlerRootView style={{ flex: 1 }}>
+//       <GlobalProvider>
+//         <ClerkProvider
+//           publishableKey={VITE_CLERK_PUBLISHABLE_KEY}
+//           tokenCache={tokenCache}
+//           navigate={(to) => navigation.navigate(to)}
+//         >
+//           <InitialLayout />
+//         </ClerkProvider>
+//       </GlobalProvider>
+//     </GestureHandlerRootView>
+//   );
+// };
+
 const RootLayout = () => {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <GlobalProvider>
-        <ClerkProvider
-          publishableKey={VITE_CLERK_PUBLISHABLE_KEY}
-          tokenCache={tokenCache}
-          navigate={(to) => navigation.navigate(to)}
-        >
+      <ClerkProvider
+        publishableKey={VITE_CLERK_PUBLISHABLE_KEY}
+        tokenCache={tokenCache}
+        navigate={(to) => navigation.navigate(to)}
+      >
+        <GlobalProvider>
           <InitialLayout />
-        </ClerkProvider>
-      </GlobalProvider>
+        </GlobalProvider>
+      </ClerkProvider>
     </GestureHandlerRootView>
   );
 };

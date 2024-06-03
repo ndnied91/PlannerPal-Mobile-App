@@ -5,6 +5,7 @@ import {
   FlatList,
   // TouchableOpacity,
   Keyboard,
+  ActivityIndicator,
   // ScrollView,
 } from 'react-native';
 import { useUser } from '@clerk/clerk-expo';
@@ -12,7 +13,7 @@ import { useGlobalContext } from '../context/GlobalProvider';
 import OverviewTodo from './OverviewTodo';
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { convertToNormalTime } from '../../utils/utilsFunctions';
 import ViewPastDue from './ViewPastDue';
 import SearchBar from './SearchBar';
@@ -29,6 +30,7 @@ const Overview = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const activeTodos = sortedTodos.filter((item) => !item.isCompleted);
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(true);
   const pastDue = sortedTodos.filter(
     (item) => new Date(item.dueDate).getTime() < Date.now() && !item.isCompleted
   );
@@ -54,6 +56,10 @@ const Overview = () => {
   const renderItem = ({ item }) => (
     <OverviewTodo item={item} navigation={navigation} />
   );
+
+  useEffect(() => {
+    activeTodos.length > 0 && setLoading(false);
+  }, [activeTodos]);
 
   return (
     <SafeAreaView
@@ -149,7 +155,11 @@ const Overview = () => {
                     </TouchableOpacity>
                   </View>
 
-                  {currentDayTodos.length > 0 ? (
+                  {loading ? (
+                    <View>
+                      <ActivityIndicator />
+                    </View>
+                  ) : currentDayTodos.length > 0 ? (
                     <FlatList
                       data={currentDayTodos}
                       showsVerticalScrollIndicator={false}

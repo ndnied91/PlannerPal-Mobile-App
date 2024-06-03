@@ -43,6 +43,7 @@ const SortModal = ({ isSortModalVisible, setIsSortModalVisible }) => {
                 <Picker.Item label="Default" value="default" />
                 <Picker.Item label="Alphabetical" value="alphabetical" />
                 <Picker.Item label="Due Date" value="dueDate" />
+                <Picker.Item label="Date Modified" value="lastModifiedDate" />
                 {/* Add more sorting options as needed */}
               </Picker>
 

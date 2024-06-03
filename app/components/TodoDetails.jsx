@@ -6,7 +6,6 @@ import {
   SafeAreaView,
   Platform,
   TextInput,
-  Button,
   Alert,
 } from 'react-native';
 import { CheckBox } from '@rneui/themed';
@@ -21,20 +20,14 @@ import CountdownComponent from './CountdownComponent';
 import ColorPicker from './ColorPicker';
 
 const TodoDetails = ({ item, navigation }) => {
-  const {
-    fetchTodos,
-    updateCompletion,
-    deleteTodo,
-    colorsInUse,
-    setColorsInUse,
-    sortedTodos,
-    updateFilterColors,
-  } = useGlobalContext();
+  const { fetchTodos, updateCompletion, deleteTodo, updateFilterColors } =
+    useGlobalContext();
 
   const [itemDetails, setItemDetails] = useState({
     title: item.title,
     body: item.body,
     isPriority: item.isPriority,
+    lastModifiedDate: item.lastModifiedDate,
   });
 
   const [selectedDate, setSelectedDate] = useState(new Date(item?.dueDate));
@@ -64,24 +57,6 @@ const TodoDetails = ({ item, navigation }) => {
     });
   };
 
-  // const updateFilterColors = async () => {
-  //   try {
-  //     const { data, error } = await supabase
-  //       .from('todos')
-  //       .select('bg_color')
-  //       .eq('isCompleted', false)
-  //       .order('dueDate', { ascending: false });
-
-  //     if (error) {
-  //       throw error;
-  //     }
-
-  //     setColorsInUse([...new Set(data.map((item) => item.bg_color))]);
-  //   } catch (error) {
-  //     console.log('Error fetching data:', error.message);
-  //   }
-  // };
-
   const handleSubmit = async () => {
     try {
       const { data, error } = await supabase
@@ -92,6 +67,7 @@ const TodoDetails = ({ item, navigation }) => {
           body: itemDetails.body,
           dueDate: selectedDate,
           bg_color: selectedColor,
+          lastModifiedDate: new Date(), // Update the last modified date
         })
         .eq('id', item.id)
         .select();
@@ -128,7 +104,7 @@ const TodoDetails = ({ item, navigation }) => {
               </View>
 
               <View
-                className=" rounded-md p-4"
+                className="rounded-md p-4"
                 style={{
                   borderColor:
                     item.bg_color !== null ? item.bg_color : '#E0E0E0',
@@ -136,13 +112,38 @@ const TodoDetails = ({ item, navigation }) => {
                 }}
               >
                 {/* background would go here, idk if I wanna do it */}
-                <TouchableOpacity
-                  className=" items-end"
-                  onPress={() => setIsEditable(!isEditable)}
-                >
-                  <FontAwesome5 name="pencil-alt" size={24} color="black" />
-                </TouchableOpacity>
+                <View className="flex-row items-start justify-between">
+                  <View className="p-3 rounded-lg shadow-md mb-3 ">
+                    <View className="flex-row">
+                      <Text className="text-xs text-gray-700">Created: </Text>
+                      <Text className="text-xs text-gray-700">
+                        {' '}
+                        {convertToNormalTime(item.created_at, 'short')}{' '}
+                      </Text>
+                    </View>
 
+                    <View>
+                      <Text className="text-xs text-gray-700">
+                        Last Modified Date:{' '}
+                        {convertToNormalTime(
+                          itemDetails.lastModifiedDate,
+                          'short'
+                        )}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <TouchableOpacity
+                    className=" items-end"
+                    onPress={() => setIsEditable(!isEditable)}
+                  >
+                    <FontAwesome5 name="pencil-alt" size={24} color="black" />
+                  </TouchableOpacity>
+                </View>
+
+                {/*  */}
+
+                {/*  */}
                 <View className="flex-row">
                   <Text className="text-xs text-gray-500">Title: </Text>
                 </View>
@@ -172,8 +173,8 @@ const TodoDetails = ({ item, navigation }) => {
                   onChangeText={(text) => handleInputChange('body', text)}
                 />
 
-                <View className="flex-row mb-2 ">
-                  <Text className=" text-gray-500">Priority Item:</Text>
+                <View className="flex-row mb-2 items-start">
+                  <Text className=" text-gray-500 pt-0.5">Priority Item:</Text>
                   <View className="pl-1">
                     <Text>
                       {!isEditable ? (

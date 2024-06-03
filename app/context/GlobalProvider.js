@@ -1,15 +1,15 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { supabase } from '../../utils/SupabaseConfig';
 import { Alert } from 'react-native';
-
+import { useUser } from '@clerk/clerk-expo';
 const GlobalContext = createContext();
 
 export const useGlobalContext = () => useContext(GlobalContext);
 
 const GlobalProvider = ({ children }) => {
+  const { user } = useUser();
   const [isLogged, setIsLogged] = useState(false);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(user);
   const [sortOption, setSortOption] = useState('dueDate'); // State variable for sorting option
   const [todos, setTodos] = useState([]);
   const [error, setError] = useState(null);
@@ -25,14 +25,20 @@ const GlobalProvider = ({ children }) => {
       return a.title.localeCompare(b.title);
     } else if (sortOption === 'dueDate') {
       return b.dueDate.localeCompare(a.dueDate);
+    } else if (sortOption === 'lastModifiedDate') {
+      return b.lastModifiedDate.localeCompare(a.lastModifiedDate);
     }
+
     // Add more sorting options as needed
     return 0;
   });
 
   useEffect(() => {
-    fetchTodos();
-  }, []); // Empty dependency array ensures this effect runs only once, similar to componentDidMount
+    if (user) {
+      setCurrentUser(user);
+      fetchTodos();
+    }
+  }, [user, currentUser]);
 
   useEffect(() => {
     setCategories([...new Set(todos.map((todos) => todos.category))]);
@@ -43,6 +49,7 @@ const GlobalProvider = ({ children }) => {
       const { data, error } = await supabase
         .from('todos')
         .select()
+        .eq('created_by', currentUser.primaryEmailAddress.emailAddress)
         .order('dueDate', { ascending: false }); // Change column_name to the column you want to sor
       if (error) {
         throw error;
@@ -55,7 +62,6 @@ const GlobalProvider = ({ children }) => {
   };
 
   const updateFilterColors = async () => {
-    console.log('updateFilterColors');
     try {
       const { data, error } = await supabase
         .from('todos')
@@ -97,7 +103,7 @@ const GlobalProvider = ({ children }) => {
                 .eq('id', id);
 
               if (status === 204) {
-                console.log(status);
+                // console.log(status);
                 if (callback && typeof callback === 'function') {
                   callback(); // Call the callback function
                 }
@@ -179,9 +185,8 @@ const GlobalProvider = ({ children }) => {
       value={{
         isLogged,
         setIsLogged,
-        user,
-        setUser,
-        loading,
+        currentUser,
+        setCurrentUser,
         todos,
         setTodos,
         error,
