@@ -8,7 +8,12 @@ const CategoryPicker = ({
   setSelectedCategory,
   createItem,
 }) => {
-  const { selectedFilter, setSelectedFilter, categories } = useGlobalContext();
+  const {
+    selectedFilter,
+    setSelectedFilter,
+    categories,
+    setSelectedColorFilter,
+  } = useGlobalContext();
 
   const handleChange = (category) => {
     if (createItem) {
@@ -17,6 +22,7 @@ const CategoryPicker = ({
       //here if the component is just filtering and not creating a new category
       setSelectedFilter(category);
     }
+    setSelectedColorFilter('');
   };
 
   return (

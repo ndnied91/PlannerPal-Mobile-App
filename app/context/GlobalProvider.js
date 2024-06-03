@@ -16,6 +16,7 @@ const GlobalProvider = ({ children }) => {
   const [selectedFilter, setSelectedFilter] = useState('All');
   const [categories, setCategories] = useState([]);
   const [selectedColorFilter, setSelectedColorFilter] = useState('');
+  const [colorsInUse, setColorsInUse] = useState([]);
 
   const sortedTodos = todos.slice().sort((a, b) => {
     if (sortOption === 'default') {
@@ -47,8 +48,28 @@ const GlobalProvider = ({ children }) => {
         throw error;
       }
       setTodos(data || []);
+      updateFilterColors();
     } catch (error) {
       setError(error.message);
+    }
+  };
+
+  const updateFilterColors = async () => {
+    console.log('updateFilterColors');
+    try {
+      const { data, error } = await supabase
+        .from('todos')
+        .select('bg_color')
+        .eq('isCompleted', false)
+        .order('dueDate', { ascending: false });
+
+      if (error) {
+        throw error;
+      }
+
+      setColorsInUse([...new Set(data.map((item) => item.bg_color))]);
+    } catch (error) {
+      console.log('Error fetching data:', error.message);
     }
   };
 
@@ -109,7 +130,7 @@ const GlobalProvider = ({ children }) => {
         text: 'OK',
         onPress: async () => {
           try {
-            const { data, error } = await supabase
+            await supabase
               .from('todos')
               .update({ isCompleted: !item.isCompleted })
               .eq('id', item.id)
@@ -177,6 +198,9 @@ const GlobalProvider = ({ children }) => {
         updateCompletion,
         selectedColorFilter,
         setSelectedColorFilter,
+        colorsInUse,
+        setColorsInUse,
+        updateFilterColors,
       }}
     >
       {children}

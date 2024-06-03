@@ -3,6 +3,7 @@ import SingleTodo from './SingleTodo';
 import AppleStyleSwipeableRow from './AppleStylesSwipeableRow';
 import { useGlobalContext } from '../../context/GlobalProvider';
 import ColorFilter from '../ColorFilter';
+import { useEffect } from 'react';
 
 const SwipeableRow = ({ item, navigation }) => {
   return (
@@ -13,8 +14,14 @@ const SwipeableRow = ({ item, navigation }) => {
 };
 
 const TodoList = ({ navigation }) => {
-  const { selectedFilter, selectedColorFilter, sortedTodos } =
-    useGlobalContext();
+  const {
+    selectedFilter,
+    selectedColorFilter,
+    setSelectedColorFilter,
+    sortedTodos,
+    setColorsInUse,
+    colorsInUse,
+  } = useGlobalContext();
 
   const categoryFilter = (list) => {
     if (selectedFilter !== 'All' && selectedColorFilter !== '') {
@@ -31,7 +38,7 @@ const TodoList = ({ navigation }) => {
       // all and selected color
       return list.filter(
         (item) =>
-          item.category === selectedFilter &&
+          // item.category === selectedFilter &&
           item.bg_color === selectedColorFilter
       );
     }
@@ -40,16 +47,29 @@ const TodoList = ({ navigation }) => {
     return list;
   };
 
+  useEffect(() => {
+    let regularColors = [
+      ...new Set(categoryFilter(regularList).map((todo) => todo.bg_color)),
+    ];
+    let priorityColors = [
+      ...new Set(categoryFilter(priorityList).map((todo) => todo.bg_color)),
+    ];
+
+    setColorsInUse([
+      ...new Set([...regularColors, ...priorityColors, '#FFFFFF']),
+    ]);
+  }, [selectedFilter]);
+
   const isPriority = categoryFilter(sortedTodos).some(
     (item) => item.isPriority && !item.isCompleted
   );
 
-  const regularList = sortedTodos.filter(
-    (item) => !item.isPriority && !item.isCompleted
+  const regularList = categoryFilter(
+    sortedTodos.filter((item) => !item.isPriority && !item.isCompleted)
   );
 
-  const priorityList = sortedTodos.filter(
-    (item) => item.isPriority && !item.isCompleted
+  const priorityList = categoryFilter(
+    sortedTodos.filter((item) => item.isPriority && !item.isCompleted)
   );
 
   return (
@@ -59,7 +79,7 @@ const TodoList = ({ navigation }) => {
           <Text className="font-bold text-xl mb-3">Priority List</Text>
           <FlatList
             showsVerticalScrollIndicator={false}
-            data={categoryFilter(priorityList)}
+            data={priorityList}
             ItemSeparatorComponent={() => <View className="m-1/2" />}
             renderItem={({ item, index }) => (
               <SwipeableRow item={item} index={index} navigation={navigation} />
@@ -76,7 +96,7 @@ const TodoList = ({ navigation }) => {
         <Text className="font-bold text-xl mb-3">Current Todos</Text>
         <FlatList
           showsVerticalScrollIndicator={false}
-          data={categoryFilter(regularList)}
+          data={regularList}
           ItemSeparatorComponent={() => <View className="m-1/2" />}
           renderItem={({ item, index }) => (
             <SwipeableRow item={item} index={index} navigation={navigation} />

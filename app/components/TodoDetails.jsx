@@ -21,7 +21,15 @@ import CountdownComponent from './CountdownComponent';
 import ColorPicker from './ColorPicker';
 
 const TodoDetails = ({ item, navigation }) => {
-  const { fetchTodos, updateCompletion, deleteTodo } = useGlobalContext();
+  const {
+    fetchTodos,
+    updateCompletion,
+    deleteTodo,
+    colorsInUse,
+    setColorsInUse,
+    sortedTodos,
+    updateFilterColors,
+  } = useGlobalContext();
 
   const [itemDetails, setItemDetails] = useState({
     title: item.title,
@@ -34,8 +42,6 @@ const TodoDetails = ({ item, navigation }) => {
   const [isEditable, setIsEditable] = useState(false);
   const [targetDate, setTargetDate] = useState(selectedDate);
   const [selectedColor, setSelectedColor] = useState(item.bg_color || null);
-
-  console.log(isEditable);
 
   const handleDateChange = (event, date) => {
     setShowPicker(Platform.OS === 'ios');
@@ -58,6 +64,24 @@ const TodoDetails = ({ item, navigation }) => {
     });
   };
 
+  // const updateFilterColors = async () => {
+  //   try {
+  //     const { data, error } = await supabase
+  //       .from('todos')
+  //       .select('bg_color')
+  //       .eq('isCompleted', false)
+  //       .order('dueDate', { ascending: false });
+
+  //     if (error) {
+  //       throw error;
+  //     }
+
+  //     setColorsInUse([...new Set(data.map((item) => item.bg_color))]);
+  //   } catch (error) {
+  //     console.log('Error fetching data:', error.message);
+  //   }
+  // };
+
   const handleSubmit = async () => {
     try {
       const { data, error } = await supabase
@@ -75,11 +99,12 @@ const TodoDetails = ({ item, navigation }) => {
       if (!error) {
         Alert.alert('Item successfully updated!');
         fetchTodos();
-        navigation.goBack();
+        updateFilterColors();
       }
     } catch (e) {
       Alert(e);
     }
+    navigation.goBack();
   };
 
   const backgroundColor =
