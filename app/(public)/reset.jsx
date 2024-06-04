@@ -1,4 +1,11 @@
-import { View, StyleSheet, TextInput, Button } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Button,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import React, { useState } from 'react';
 import { Stack } from 'expo-router';
 import { useSignIn } from '@clerk/clerk-expo';
@@ -42,24 +49,34 @@ const PwReset = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 justify-start p-10">
       <Stack.Screen options={{ headerBackVisible: !successfulCreation }} />
 
       {!successfulCreation && (
         <>
           <TextInput
+            className="border border-gray-400 rounded-lg p-3 w-full mb-4"
             autoCapitalize="none"
             placeholder="simon@galaxies.dev"
+            placeholderTextColor="grey"
             value={emailAddress}
             onChangeText={setEmailAddress}
-            style={styles.inputField}
           />
 
-          <Button
+          {/* <Button
             onPress={onRequestReset}
             title="Send Reset Email"
             color={'#6c47ff'}
-          ></Button>
+          ></Button> */}
+
+          <TouchableOpacity
+            onPress={onRequestReset}
+            className="bg-gray-700 rounded-lg p-3  items-center mt-4"
+          >
+            <Text className="text-white font-bold tracking-wider">
+              Send Reset Email
+            </Text>
+          </TouchableOpacity>
         </>
       )}
 
@@ -69,7 +86,8 @@ const PwReset = () => {
             <TextInput
               value={code}
               placeholder="Code..."
-              style={styles.inputField}
+              className="border border-gray-400 rounded-lg p-3 w-full mb-1"
+              placeholderTextColor="grey"
               onChangeText={setCode}
             />
             <TextInput
@@ -77,14 +95,19 @@ const PwReset = () => {
               value={password}
               onChangeText={setPassword}
               secureTextEntry
-              style={styles.inputField}
+              className="border border-gray-400 rounded-lg p-3 w-full mb-1"
+              placeholderTextColor="grey"
             />
           </View>
-          <Button
+
+          <TouchableOpacity
             onPress={onReset}
-            title="Set new Password"
-            color={'#6c47ff'}
-          ></Button>
+            className="bg-gray-700 rounded-lg p-3  items-center mt-4"
+          >
+            <Text className="text-white font-bold tracking-wider">
+              Set new Password
+            </Text>
+          </TouchableOpacity>
         </>
       )}
     </View>
@@ -92,20 +115,6 @@ const PwReset = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
-  inputField: {
-    marginVertical: 4,
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#6c47ff',
-    borderRadius: 4,
-    padding: 10,
-    backgroundColor: '#fff',
-  },
   button: {
     margin: 8,
     alignItems: 'center',

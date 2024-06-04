@@ -10,8 +10,10 @@ import { useSignUp } from '@clerk/clerk-expo';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useState } from 'react';
 import { Stack } from 'expo-router';
+import { useNavigation } from '@react-navigation/native';
 
 const Register = () => {
+  const navigation = useNavigation();
   const { isLoaded, signUp, setActive } = useSignUp();
 
   const [emailAddress, setEmailAddress] = useState('');
@@ -102,17 +104,29 @@ const Register = () => {
         <>
           <View>
             <TextInput
+              className="border border-gray-400 rounded-lg p-3 w-full mb-1"
               value={code}
               placeholder="Code..."
-              style={styles.inputField}
+              placeholderTextColor="grey"
               onChangeText={setCode}
             />
           </View>
-          <Button
+
+          <TouchableOpacity
             onPress={onPressVerify}
-            title="Verify Email"
-            color={'#6c47ff'}
-          ></Button>
+            className="bg-gray-700 rounded-lg p-3 items-center mt-4"
+          >
+            <Text className="text-white font-bold tracking-wider">
+              Verify Email
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => navigation.replace('register')}
+            className="bg-red-500 rounded-lg p-3 items-center mt-4"
+          >
+            <Text className="text-white font-bold tracking-wider">Back</Text>
+          </TouchableOpacity>
         </>
       )}
     </View>
@@ -120,15 +134,6 @@ const Register = () => {
 };
 
 const styles = StyleSheet.create({
-  inputField: {
-    marginVertical: 4,
-    height: 50,
-    borderWidth: 1,
-    borderColor: '#6c47ff',
-    borderRadius: 4,
-    padding: 10,
-    backgroundColor: '#fff',
-  },
   button: {
     margin: 8,
     alignItems: 'center',
