@@ -1,4 +1,11 @@
-import { Button, TextInput, View, StyleSheet } from 'react-native';
+import {
+  Button,
+  TextInput,
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+} from 'react-native';
 import { useSignUp } from '@clerk/clerk-expo';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useState } from 'react';
@@ -59,32 +66,35 @@ const Register = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 justify-start p-10">
       <Stack.Screen options={{ headerBackVisible: !pendingVerification }} />
       <Spinner visible={loading} />
 
       {!pendingVerification && (
         <>
           <TextInput
+            className="border border-gray-400 rounded-lg p-3 w-full mb-4"
+            placeholder="test@gmail.com"
+            placeholderTextColor="grey"
             autoCapitalize="none"
-            placeholder="simon@galaxies.dev"
             value={emailAddress}
             onChangeText={setEmailAddress}
-            style={styles.inputField}
           />
           <TextInput
-            placeholder="password"
+            className="border border-gray-400 rounded-lg p-3 w-full mb-1"
+            placeholder="Password"
+            placeholderTextColor="grey"
             value={password}
             onChangeText={setPassword}
             secureTextEntry
-            style={styles.inputField}
           />
 
-          <Button
+          <TouchableOpacity
             onPress={onSignUpPress}
-            title="Sign up"
-            color={'#6c47ff'}
-          ></Button>
+            className="bg-gray-700 rounded-lg p-3  items-center mt-4"
+          >
+            <Text className="text-white font-bold tracking-wider">Sign up</Text>
+          </TouchableOpacity>
         </>
       )}
 
@@ -110,11 +120,6 @@ const Register = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-  },
   inputField: {
     marginVertical: 4,
     height: 50,

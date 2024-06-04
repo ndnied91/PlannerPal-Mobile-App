@@ -1,85 +1,70 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'expo-router';
 import {
   View,
   Text,
   TouchableOpacity,
   SafeAreaView,
   FlatList,
+  TextInput,
   Dimensions,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import Carousel from '../components/Carousel';
-
-import { Ionicons } from '@expo/vector-icons';
+import { useSignIn, useOAuth } from '@clerk/clerk-expo';
+import Spinner from 'react-native-loading-spinner-overlay';
+import { AntDesign } from '@expo/vector-icons';
 
 const LandingPage = ({ navigation }) => {
   const router = useRouter();
-  const renderItem = ({ item }) => (
-    <View
-      className=" p-6 items-center"
-      style={{ width: Dimensions.get('window').width }}
-    >
-      <View className="bg-gray-200 p-5 rounded-lg shadow-lg items-center w-5/6 ">
-        <Text className="text-xl font-bold">{item.name}</Text>
-        <View className="flex-row items-center mb-2">
-          {Array.from({ length: item.rating }, (_, index) => (
-            <Ionicons key={index} name="star" size={24} color="#FFD700" />
-          ))}
-        </View>
-        <Text className="text-xs">{item.review}</Text>
-      </View>
-    </View>
-  );
 
-  const reviews = [
-    {
-      name: 'Alice Johnson',
-      rating: 5,
-      review:
-        'PlannerPal has completely changed the way I manage my tasks. The ability to set priorities and deadlines has helped me stay organized and focused. Highly recommend!',
-    },
-    {
-      name: 'Bob Smith',
-      rating: 4,
-      review:
-        'I love the customization options in PlannerPal. Being able to customize task background colors helps me visually categorize my tasks, making it easier to see what needs to be done.',
-    },
-    {
-      name: 'Charlie Brown',
-      rating: 3,
-      review:
-        'PlannerPal is a solid productivity tool. It syncs seamlessly across my devices, which is great for keeping track of tasks on the go. However, I wish there were more advanced features for power users.',
-    },
-    {
-      name: 'Emily Davis',
-      rating: 5,
-      review:
-        'PlannerPal is a lifesaver! As a busy professional, I rely on it to keep track of all my tasks and deadlines. The sync feature is especially helpful for keeping everything up to date.',
-    },
-    {
-      name: 'Jack Wilson',
-      rating: 4,
-      review:
-        "I've tried several task management apps, but PlannerPal is by far the best. It's intuitive, easy to use, and has all the features I need to stay organized.",
-    },
-    {
-      name: 'Sophia Lee',
-      rating: 3,
-      review:
-        'Overall, I like PlannerPal, but I wish there were more customization options for the user interface. It would be great to be able to personalize the colors and layout more.',
-    },
-    {
-      name: 'Oliver Harris',
-      rating: 5,
-      review:
-        'PlannerPal has been a game changer for me. I love how I can easily organize my tasks and see everything at a glance. The app is simple yet powerful!',
-    },
-  ];
+  const { signIn, setActive, isLoaded } = useSignIn();
+
+  const [emailAddress, setEmailAddress] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const { startOAuthFlow } = useOAuth({ strategy: 'oauth_google' });
+
+  const onSignInPress = async () => {
+    if (!isLoaded) {
+      return;
+    }
+    setLoading(true);
+    try {
+      const completeSignIn = await signIn.create({
+        identifier: emailAddress,
+        password,
+      });
+
+      // This indicates the user is signed in
+      await setActive({ session: completeSignIn.createdSessionId });
+    } catch (err) {
+      alert(err.errors[0].message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onPress = React.useCallback(async () => {
+    try {
+      const { createdSessionId, signIn, signUp, setActive } =
+        await startOAuthFlow();
+
+      if (createdSessionId) {
+        setActive({ session: createdSessionId });
+      } else {
+        // Use signIn or signUp for next steps such as MFA
+      }
+    } catch (err) {
+      console.error('OAuth error', err);
+    }
+  }, []);
 
   return (
     <SafeAreaView className="flex justify-center items-center h-full bg-white p-4">
-      <View className="h-[60%] w-full items-center">
-        <View className="">
+      <View className="w-full items-center">
+        <View>
           <Text
             style={{
               fontSize: 45,
@@ -93,27 +78,80 @@ const LandingPage = ({ navigation }) => {
           >
             PlannerPal
           </Text>
-          <Text className="text-lg text-gray-600 mt-2 text-center">
+          <Text className="text-md text-gray-600 mt-2 text-center w-60">
             Your ultimate tool for staying organized and productive.
           </Text>
         </View>
 
-        <Carousel
-          data={reviews}
-          renderItem={renderItem}
-          slideInterval={3000} // Change slide every 3 seconds
-        />
+        <View className="items-center w-full">
+          <Spinner visible={loading} />
 
-        <TouchableOpacity
-          className="bg-blue-600 py-3 px-6 rounded-lg shadow-lg w-4/6"
-          onPress={() => {
-            router.push('/login');
-          }}
-        >
-          <Text className="text-white text-xl font-semibold tracking-widest text-center ">
-            Get Started
-          </Text>
-        </TouchableOpacity>
+          <View className="p-6 mt-10 w-full ">
+            <TextInput
+              className="border border-gray-400 rounded-lg p-3 w-full mb-4"
+              placeholder="Email address"
+              placeholderTextColor="grey"
+              autoCapitalize="none"
+              value={emailAddress}
+              onChangeText={setEmailAddress}
+            />
+
+            <TextInput
+              className="border border-gray-400 rounded-lg p-3 w-full mb-1"
+              placeholder="Password"
+              placeholderTextColor="grey"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry
+            />
+
+            <View className="flex-row justify-end mb-4">
+              <Link href="/reset" asChild>
+                <TouchableOpacity>
+                  <Text className="text-gray-600">Forgot password?</Text>
+                </TouchableOpacity>
+              </Link>
+            </View>
+          </View>
+
+          <View className="flex-row gap-4 flex-wrap items-center justify-center pl-8 pr-8">
+            <TouchableOpacity
+              onPress={onSignInPress}
+              className="bg-gray-700 rounded-lg p-3 w-full items-center"
+            >
+              <Text className="text-white font-bold tracking-wider">
+                Log in
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View className="flex flex-row items-center pl-8 pr-8 mt-4 mb-5">
+          <View className="flex-1 border-t border-gray-200"></View>
+          <Text className="text-gray-600 mx-4">OR</Text>
+          <View className="flex-1 border-t border-gray-200 "></View>
+        </View>
+
+        <View className="flex-row items-center">
+          <TouchableOpacity
+            onPress={onPress}
+            className="bg-blue-600 rounded-lg p-3 flex-row items-center"
+          >
+            <AntDesign name="google" size={24} color="white" />
+            <Text className="ml-2 text-white font-bold">
+              Sign in with Google
+            </Text>
+          </TouchableOpacity>
+        </View>
+
+        <View className="flex-row mt-32">
+          <Text> Dont have an account? </Text>
+          <Link href="/register" asChild>
+            <TouchableOpacity className="">
+              <Text className="text-blue-500">Sign up</Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
       </View>
     </SafeAreaView>
   );
