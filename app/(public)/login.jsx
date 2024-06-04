@@ -3,13 +3,9 @@ import { Link } from 'expo-router';
 import React, { useState } from 'react';
 import {
   View,
-  StyleSheet,
   TextInput,
-  Button,
-  Pressable,
-  Text,
-  Alert,
   TouchableOpacity,
+  Text,
   ScrollView,
   SafeAreaView,
 } from 'react-native';
@@ -63,61 +59,65 @@ const Login = () => {
   }, []);
 
   return (
-    <SafeAreaView className="h-screen bg-gray-950">
+    <SafeAreaView className="h-screen bg-gray-100 ">
       <ScrollView>
         <View className="items-center">
           <Spinner visible={loading} />
 
           <View className="p-6 mt-10 w-full">
-            <Text className="text-white"> Email </Text>
+            <Text className="text-black">Email</Text>
             <TextInput
-              className="bg-gray-700 rounded-lg p-4 text-gray-950  mb-4"
+              className="border border-gray-400 rounded-lg p-3 w-full mb-4"
+              placeholder="Enter your email address"
+              placeholderTextColor="black"
               autoCapitalize="none"
               value={emailAddress}
               onChangeText={setEmailAddress}
             />
 
-            <Text className="text-white"> Password </Text>
+            <Text className="text-black">Password</Text>
             <TextInput
+              className="border border-gray-400 rounded-lg p-3 w-full mb-4"
+              placeholder="Enter your password"
+              placeholderTextColor="black"
               value={password}
               onChangeText={setPassword}
               secureTextEntry
-              className="bg-gray-700 rounded-lg p-4 text-gray-950"
             />
           </View>
 
-          <TouchableOpacity
-            onPress={onSignInPress}
-            title="Login"
-            color={'#6c47ff'}
-            className="bg-gray-500 rounded-lg p-4 items-center w-48 "
-          >
-            <Text className="text-white font-bold tracking-widest"> Login</Text>
-          </TouchableOpacity>
-
-          <Link href="/reset" asChild>
-            <TouchableOpacity>
-              <Text>Forgot password?</Text>
-            </TouchableOpacity>
-          </Link>
-          <Link href="/register" asChild>
-            <TouchableOpacity className="bg-gray-500 rounded-lg p-4 items-center w-48 ">
-              <Text className="text-white font-bold tracking-widest">
-                Create Account
-              </Text>
-            </TouchableOpacity>
-          </Link>
-
-          <View className="mt-20 w-max flex-row">
+          <View className="flex-row gap-4 flex-wrap items-center justify-center">
             <TouchableOpacity
-              title="Sign in with Google"
-              onPress={onPress}
-              className="flex-row bg-white rounded-lg p-4 items-center w-48 "
+              onPress={onSignInPress}
+              className="bg-gray-700 rounded-lg p-3 w-48 items-center"
             >
-              <Text>
-                <AntDesign name="google" size={24} color="black" />
-              </Text>
-              <Text> Sign in with Google </Text>
+              <Text className="text-white font-bold tracking-wider">Login</Text>
+            </TouchableOpacity>
+
+            <Link href="/register" asChild>
+              <TouchableOpacity className="bg-gray-700 rounded-lg p-3 w-48 items-center">
+                <Text className="text-white font-bold tracking-wider">
+                  Create Account
+                </Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
+
+          <View className="flex-row mt-4">
+            <Link href="/reset" asChild>
+              <TouchableOpacity>
+                <Text className="text-gray-600">Forgot password?</Text>
+              </TouchableOpacity>
+            </Link>
+          </View>
+
+          <View className="mt-10 flex-row items-center">
+            <TouchableOpacity
+              onPress={onPress}
+              className="bg-white rounded-lg p-3 flex-row items-center"
+            >
+              <AntDesign name="google" size={24} color="black" />
+              <Text className="ml-2">Sign in with Google</Text>
             </TouchableOpacity>
           </View>
         </View>
